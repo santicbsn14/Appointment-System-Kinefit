@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "target": "ES2020",
+    "baseUrl": "./",
+    "paths": {
+      "typesMongoose": ["Source/Utils/Types/typesMongoose"],
+      "typesRequestDtos": ["Source/Utils/Types/typesRequestDtos"]
+    },
+    "outDir": "./dist",
+    "rootDir": "./Source",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": false, 
+    "moduleDetection": "force"
+  },
+  "include": ["Source/**/*", "global.d.ts"],
+  "exclude": ["node_modules"]
+}

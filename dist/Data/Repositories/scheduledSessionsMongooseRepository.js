@@ -13,7 +13,7 @@ class ScheduledSessionsRepository {
                 _id: scheduledSessions._id,
                 professional_id: scheduledSessions.professional_id,
                 pacient_id: scheduledSessions.pacient_id,
-                week_day: scheduledSessions.week_day,
+                session_dates: scheduledSessions.session_dates,
                 start_date: scheduledSessions.start_date,
                 number_sessions: scheduledSessions.number_sessions,
                 state: scheduledSessions.state,
@@ -41,7 +41,7 @@ class ScheduledSessionsRepository {
             _id: newScheduledSessions._id,
             professional_id: newScheduledSessions.professional_id,
             pacient_id: newScheduledSessions.pacient_id,
-            week_day: newScheduledSessions.week_day,
+            session_dates: newScheduledSessions.session_dates,
             start_date: newScheduledSessions.start_date,
             number_sessions: newScheduledSessions.number_sessions,
             state: newScheduledSessions.state,
@@ -56,7 +56,7 @@ class ScheduledSessionsRepository {
             _id: scheduledSessions._id,
             professional_id: scheduledSessions.professional_id,
             pacient_id: scheduledSessions.pacient_id,
-            week_day: scheduledSessions.week_day,
+            session_dates: scheduledSessions.session_dates,
             start_date: scheduledSessions.start_date,
             number_sessions: scheduledSessions.number_sessions,
             state: scheduledSessions.state,
@@ -64,14 +64,14 @@ class ScheduledSessionsRepository {
         };
     }
     async updateScheduledSessions(id, body) {
-        const updatedScheduledSessions = await scheduledSessionsSchema.findByIdAndUpdate(id, body);
+        const updatedScheduledSessions = await scheduledSessionsSchema.findByIdAndUpdate(id, body, { new: true, runValidators: true });
         if (!updatedScheduledSessions)
             throw new Error('A problem occurred when the ScheduledSessions was updated');
         return {
             _id: updatedScheduledSessions._id,
             professional_id: updatedScheduledSessions.professional_id,
             pacient_id: updatedScheduledSessions.pacient_id,
-            week_day: updatedScheduledSessions.week_day,
+            session_dates: updatedScheduledSessions.session_dates,
             start_date: updatedScheduledSessions.start_date,
             number_sessions: updatedScheduledSessions.number_sessions,
             state: updatedScheduledSessions.state,

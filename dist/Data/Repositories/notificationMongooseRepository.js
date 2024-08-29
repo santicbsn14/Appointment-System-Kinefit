@@ -1,4 +1,4 @@
-import notificationSchema from '../Models/notificationsSchema.js';
+import notificationSchema from '../Models/notificationSchema.js';
 class NotificationRepository {
     async getAll(criteria) {
         let { limit = 30, page = 1 } = criteria;
@@ -58,7 +58,7 @@ class NotificationRepository {
         };
     }
     async updateNotification(id, body) {
-        const updatedNotification = await notificationSchema.findByIdAndUpdate(id, body);
+        const updatedNotification = await notificationSchema.findByIdAndUpdate(id, body, { new: true, runValidators: true });
         if (!updatedNotification)
             throw new Error('A problem occurred when the Notification was updated');
         return {

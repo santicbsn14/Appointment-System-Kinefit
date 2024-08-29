@@ -13,7 +13,7 @@ const mockPatientRepository = {
     deletePatient: vi.fn()
 }
 
-vi.mock('../container', () => ({
+vi.mock('../../container', () => ({
     default: {
       resolve: vi.fn(() => mockPatientRepository)
     }
@@ -86,7 +86,7 @@ describe('PatientManager', () =>{
                 user_id:new mongoose.Types.ObjectId(),
                 clinical_data: ['Tuvo diabetes']
             }
-            await patientManager.deletePatient(patient._id)
+            if(patient._id) await patientManager.deletePatient(patient._id)
             expect(mockPatientRepository.deletePatient).toHaveBeenCalledWith(patient._id)
         })
         it('should throw an error with invalid id', async () => {

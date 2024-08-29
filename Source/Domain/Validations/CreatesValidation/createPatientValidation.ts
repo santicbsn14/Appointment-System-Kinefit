@@ -1,9 +1,10 @@
 import mongoose from 'mongoose'
 import z from 'zod'
+import idValidation from '../idValidation'
 
 const createPatientValidation= z.object(
     {
-        user_id: z.instanceof(mongoose.Types.ObjectId),
+        user_id: idValidation,
         clinical_data:z.array(z.unknown())
     }
 )

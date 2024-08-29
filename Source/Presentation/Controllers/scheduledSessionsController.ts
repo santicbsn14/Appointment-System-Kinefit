@@ -2,7 +2,6 @@ import { NextFunction, Response } from "express";
 import { ScheduledSessions } from "../../Data/Models/scheduledSessionsSchema";
 import ScheduledSessionsManager from "../../Domain/Manager/scheduledSessionsManager";
 import { IdMongo, Criteria } from "typesMongoose";
-import mongoose from "mongoose";
 import { CreateScheduledSessionsDto} from "typesRequestDtos";
 
 

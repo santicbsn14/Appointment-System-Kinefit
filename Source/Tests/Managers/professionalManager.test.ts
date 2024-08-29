@@ -12,7 +12,7 @@ const mockProfessionalRepository = {
     deleteProfessional: vi.fn()
   }
 
-  vi.mock('../container', () => ({
+  vi.mock('../../container', () => ({
     default: {
       resolve: vi.fn(() => mockProfessionalRepository)
     }
@@ -48,15 +48,18 @@ describe('ProfessionalManager', () =>{
     
     describe('createProfessional', () => {
         it('should call professionalRepository.createProfessional with valid data', async () =>{
-            let uid : IdMongo = new mongoose.Types.ObjectId()
+            let uid : IdMongo = new mongoose.Types.ObjectId('66c65b641bb4017c5a0f3d14')
              // @ts-ignore entorno de testing
             await professionalManager.createProfessional(uid)
-            expect(mockProfessionalRepository.createProfessional).toHaveBeenCalledWith(uid)
+            expect(mockProfessionalRepository.createProfessional).toHaveBeenCalledWith({
+                ...uid, 
+                user_id: expect.any(mongoose.Types.ObjectId)
+            })
         })
         it('should throw an error with invalid id', async () => {
             const invalidId = 'invalid-id'
             // @ts-ignore porfa
-            await expect(professionalManager.createProfessional(invalidId as IdMongo)).rejects.toThrow()
+            await expect(professionalManager.createProfessional({ user_id: invalidId } as CreateProfessionalDto)).rejects.toThrow()
           })
     })
     describe('updateProfessional', () => {

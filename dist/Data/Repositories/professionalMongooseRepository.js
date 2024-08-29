@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import professionalSchema from '../Models/professionalSchema.js';
 class ProfessionalRepository {
     async getAll(criteria) {
@@ -28,9 +27,7 @@ class ProfessionalRepository {
             nextPage: professionalDocuments.nextPage,
         };
     }
-    async createProfessional(id) {
-        let pid = new mongoose.Types.ObjectId(id);
-        let body = { user_id: pid };
+    async createProfessional(body) {
         const newProfessional = await professionalSchema.create(body);
         if (!newProfessional)
             throw new Error('A problem occurred when the Professional was created');
@@ -49,7 +46,7 @@ class ProfessionalRepository {
         };
     }
     async updateProfessional(id, body) {
-        const updatedProfessional = await professionalSchema.findByIdAndUpdate(id, body);
+        const updatedProfessional = await professionalSchema.findByIdAndUpdate(id, body, { new: true, runValidators: true });
         if (!updatedProfessional)
             throw new Error('A problem occurred when the Professional was updated');
         return {

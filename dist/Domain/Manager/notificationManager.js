@@ -1,6 +1,7 @@
 import container from "../../container.js";
 import idValidation from "../Validations/idValidation.js";
 import createNotificationValidation from "../Validations/CreatesValidation/createNotificationValidation.js";
+import mongoose from "mongoose";
 class NotificationManager {
     constructor() {
         this.notificationRepository = container.resolve('NotificationRepository');
@@ -12,7 +13,8 @@ class NotificationManager {
         await idValidation.parseAsync(id);
         return await this.notificationRepository.getNotificationById(id);
     }
-    async createNotification(body) {
+    async createNotification(bodyDto) {
+        let body = { ...bodyDto, appointment_id: new mongoose.Types.ObjectId(bodyDto.appointment_id) };
         await createNotificationValidation.parseAsync(body);
         return await this.notificationRepository.createNotification(body);
     }

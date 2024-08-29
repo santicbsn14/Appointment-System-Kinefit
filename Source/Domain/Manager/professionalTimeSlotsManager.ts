@@ -1,35 +1,38 @@
 import container from "../../container";
-import { type ProfessionalTimesSlots } from "../../Data/Models/professionalTimeSlotsSchema"
+import { type ProfessionalTimeSlots } from "../../Data/Models/professionalTimeSlotsSchema"
 import idValidation from "../Validations/idValidation";
 import { Criteria, IdMongo } from "../../Utils/Types/typesMongoose";
-import createProfessionalTimesSlotsValidation from "../Validations/CreatesValidation/createProfessionalTimesSlots";
+import createProfessionalTimeSlotsValidation from "../Validations/CreatesValidation/createProfessionalTimesSlots";
+import { CreateProfessionalTimeSlotsDto } from "typesRequestDtos";
+import mongoose from "mongoose";
 
 
 
-class ProfessionalTimesSlotsManager {
+class ProfessionalTimeSlotsManager {
     private professionalTimeSlotsRepository
 
     constructor(){
-        this.professionalTimeSlotsRepository = container.resolve('ProfessionalTimesSlotsRepository');
+        this.professionalTimeSlotsRepository = container.resolve('ProfessionalTimeSlotsRepository');
     }
     async getAll(criteria: Criteria){
        return await this.professionalTimeSlotsRepository.getAll(criteria)
     }
-    async getProfessionalTimesSlotsById(id: IdMongo){
+    async getProfessionalTimeSlotsById(id: IdMongo){
         await idValidation.parseAsync(id)
-        return await this.professionalTimeSlotsRepository.getProfessionalTimesSlotsById(id)
+        return await this.professionalTimeSlotsRepository.getProfessionalTimeSlotsById(id)
     }
-    async createProfessionalTimesSlots(body:ProfessionalTimesSlots){
-        await createProfessionalTimesSlotsValidation.parseAsync(body)
-        return await this.professionalTimeSlotsRepository.createProfessionalTimesSlots(body)
+    async createProfessionalTimeSlots(bodyDto:CreateProfessionalTimeSlotsDto){
+        let body  = {...bodyDto, professional_id: new mongoose.Types.ObjectId(bodyDto.professional_id)}
+        await createProfessionalTimeSlotsValidation.parseAsync(body)
+        return await this.professionalTimeSlotsRepository.createProfessionalTimeSlots(body)
     }
-    async updateProfessionalTimesSlots(body:ProfessionalTimesSlots, id:IdMongo){
+    async updateProfessionalTimeSlots(body:ProfessionalTimeSlots, id:IdMongo){
         await idValidation.parseAsync(id)
-        return await this.professionalTimeSlotsRepository.updateProfessionalTimesSlots(body, id)
+        return await this.professionalTimeSlotsRepository.updateProfessionalTimeSlots(body, id)
     }
-    async deleteProfessionalTimesSlots(id: IdMongo){
+    async deleteProfessionalTimeSlots(id: IdMongo){
         await idValidation.parseAsync(id)
-        return await this.professionalTimeSlotsRepository.deleteProfessionalTimesSlots(id)
+        return await this.professionalTimeSlotsRepository.deleteProfessionalTimeSlots(id)
     }
 }
-export default ProfessionalTimesSlotsManager
+export default ProfessionalTimeSlotsManager

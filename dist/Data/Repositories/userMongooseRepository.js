@@ -92,7 +92,7 @@ class UserMongooseRepository {
         };
     }
     async updateUser(userId, body) {
-        const user = await userSchema.findByIdAndUpdate(userId, body);
+        const user = await userSchema.findByIdAndUpdate(userId, body, { new: true, runValidators: true });
         if (!user)
             throw new Error('A problem occurred when the user was updated');
         return {

@@ -13,7 +13,7 @@ export interface IUser  {
   role: mongoose.Types.ObjectId;
   status: boolean;
   password: string;
-  _id: mongoose.Types.ObjectId
+  _id?: mongoose.Types.ObjectId
 }
 
 export interface IUserPublic {

@@ -1,5 +1,5 @@
 import mongoose, { PaginateResult } from 'mongoose';
-import notificationSchema, {Notification} from '../Models/notificationsSchema';
+import notificationSchema, {Notification} from '../Models/notificationSchema';
 import { Paginated, Criteria, IdMongo } from '../../Utils/Types/typesMongoose';
 
 interface INotificationRepository{
@@ -68,7 +68,8 @@ class NotificationRepository implements INotificationRepository{
         }
     }
     async updateNotification(id: IdMongo, body :Partial<Notification>):Promise<Notification|null>{
-      const updatedNotification = await notificationSchema.findByIdAndUpdate(id, body)
+      const updatedNotification = await notificationSchema.findByIdAndUpdate(id, body, 
+        { new: true, runValidators: true })
       if(!updatedNotification) throw new Error('A problem occurred when the Notification was updated')
       
         return {

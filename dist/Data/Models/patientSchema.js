@@ -5,10 +5,12 @@ const patientSchema = new Schema({
     mutual: { type: String, required: false }, // Cambiado a String
     clinical_data: { type: [Schema.Types.Mixed], required: true } // Cambiado a un array de tipo Mixed
 });
-patientSchema.pre(/^find/, function (next) {
-    const query = this;
-    query.populate('user_id');
-    next();
-});
+if (process.env.NODE_ENV !== 'test') {
+    patientSchema.pre(/^find/, function (next) {
+        const query = this;
+        query.populate('user_id');
+        next();
+    });
+}
 patientSchema.plugin(paginate);
 export default mongoose.model('patients', patientSchema);

@@ -61,7 +61,8 @@ class PatientRepository implements IPatientRepository{
     }
   }
   async updatePatient(id: IdMongo, body :Partial<Patient>):Promise<Patient|null>{
-    const updatedPatient = await patientSchema.findByIdAndUpdate(id, body)
+    const updatedPatient = await patientSchema.findByIdAndUpdate(id, body, 
+      { new: true, runValidators: true })
     if(!updatedPatient) throw new Error('A problem occurred when the patient was updated')
     
     return {

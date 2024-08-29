@@ -2,7 +2,7 @@ import NotificationManager from "Source/Domain/Manager/notificationManager";
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Criteria, IdMongo } from 'Source/Utils/Types/typesMongoose'
 import mongoose from 'mongoose'
-import { type Notification } from "Source/Data/Models/notificationsSchema";
+import { type Notification } from "Source/Data/Models/notificationSchema";
 
 
 const mockNotificationRepository = {
@@ -13,7 +13,7 @@ const mockNotificationRepository = {
     deleteNotification: vi.fn()
 }
 
-vi.mock('../container', () => ({
+vi.mock('../../container', () => ({
     default: {
       resolve: vi.fn(() => mockNotificationRepository)
     }
@@ -51,10 +51,11 @@ describe('NotificationManager', () =>{
         it('should call notificationRepository.createNotification with valid data', async () =>{
             let notification : Notification = {appointment_id: new mongoose.Types.ObjectId(),
                 type: 'confirmacion',
-                state:'pendiente',
+                state:'Pendiente',
                 date_send: new Date(),
                 note:' Gracias por confirmar el turno'
             }
+            // @ts-ignore entorno testing
             await notificationManager.createNotification(notification)
             expect(mockNotificationRepository.createNotification).toHaveBeenCalledWith(notification)
         })
@@ -69,7 +70,7 @@ describe('NotificationManager', () =>{
             let uid : IdMongo = new mongoose.Types.ObjectId()
             let notification : Notification = {appointment_id: new mongoose.Types.ObjectId(),
                 type: 'confirmacion',
-                state:'pendiente',
+                state:'Pendiente',
                 date_send: new Date(),
                 note:' Gracias por confirmar el turno'
             }
@@ -87,7 +88,7 @@ describe('NotificationManager', () =>{
             let id : IdMongo = new mongoose.Types.ObjectId()
             let notification : Notification = {appointment_id: new mongoose.Types.ObjectId(),
                 type: 'confirmacion',
-                state:'pendiente',
+                state:'Pendiente',
                 date_send: new Date(),
                 note:' Gracias por confirmar el turno',
                 _id:id

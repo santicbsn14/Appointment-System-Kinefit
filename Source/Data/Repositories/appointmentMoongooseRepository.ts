@@ -25,6 +25,7 @@ class AppointmentRepository implements IAppointmentRepository{
             pacient_id: appointment.pacient_id,
             professional_id: appointment.professional_id,
             date_time: appointment.date_time,
+            schedule: appointment.schedule,
             state: appointment.state,
             session_type: appointment.session_type
         }
@@ -50,6 +51,7 @@ class AppointmentRepository implements IAppointmentRepository{
             pacient_id: newAppointment.pacient_id,
             professional_id: newAppointment.professional_id,
             date_time: newAppointment.date_time,
+            schedule: newAppointment.schedule,
             state: newAppointment.state,
             session_type: newAppointment.session_type
         }
@@ -63,12 +65,14 @@ class AppointmentRepository implements IAppointmentRepository{
             pacient_id: appointment.pacient_id,
             professional_id: appointment.professional_id,
             date_time: appointment.date_time,
+            schedule: appointment.schedule,
             state: appointment.state,
             session_type: appointment.session_type
         }
     }
     async updateAppointment(id: IdMongo, body :Partial<Appointment>):Promise<Appointment|null>{
-      const updatedAppointment = await appointmentSchema.findByIdAndUpdate(id, body)
+      const updatedAppointment = await appointmentSchema.findByIdAndUpdate(id, body, 
+        { new: true, runValidators: true })
       if(!updatedAppointment) throw new Error('A problem occurred when the Appointment was updated')
       
         return {
@@ -76,6 +80,7 @@ class AppointmentRepository implements IAppointmentRepository{
             pacient_id: updatedAppointment.pacient_id,
             professional_id: updatedAppointment.professional_id,
             date_time: updatedAppointment.date_time,
+            schedule: updatedAppointment.schedule,
             state: updatedAppointment.state,
             session_type: updatedAppointment.session_type
         }

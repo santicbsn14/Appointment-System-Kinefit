@@ -4,7 +4,7 @@ const appointmentSchema = new Schema({
     pacient_id: { type: Schema.Types.ObjectId, ref: 'pacients', required: true },
     professional_id: { type: Schema.Types.ObjectId, ref: 'professionals', required: true },
     date_time: { type: Schema.Types.Date, required: true },
-    state: { type: Schema.Types.String, required: true },
+    state: { type: Schema.Types.String, required: true, default: 'Solicitado' },
     session_type: { type: Schema.Types.String, required: true }
 });
 appointmentSchema.plugin(paginate);

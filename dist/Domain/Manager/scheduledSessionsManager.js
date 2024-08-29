@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 class ScheduledSessionsManager {
     constructor() {
         this.scheduledSessionsRepository = container.resolve('ScheduledSessionsRepository');
+        this.professionalTimeSlotRepository = container.resolve('ProfessionalTimeSlotRepository');
     }
     async getAll(criteria) {
         return await this.scheduledSessionsRepository.getAll(criteria);
@@ -17,10 +18,14 @@ class ScheduledSessionsManager {
     async createScheduledSessions(bodyDto) {
         let body = { ...bodyDto,
             pacient_id: new mongoose.Types.ObjectId(bodyDto.pacient_id),
-            professional_id: new mongoose.Types.ObjectId(bodyDto.professional_id)
+            professional_id: new mongoose.Types.ObjectId(bodyDto.professional_id),
+            state: 'Pending'
         };
         await createScheduledSessionsValidation.parseAsync(body);
-        return await this.scheduledSessionsRepository.createScheduledSessions(body);
+        let proTimeSlots = await this.professionalTimeSlotRepository.getProfessionalTimeSlotsByPro(body.professional_id);
+        if (proTimeSlots)
+            throw new Error('Professional not found');
+        // return await this.scheduledSessionsRepository.createScheduledSessions(body)
     }
     async updateScheduledSessions(body, id) {
         await idValidation.parseAsync(id);

@@ -4,7 +4,7 @@ import { Paginated, Criteria, IdMongo } from '../../Utils/Types/typesMongoose';
 
 interface IProfessionalRepository{
   getAll: (criteria :Criteria)=> Promise<Paginated<Professional>| null>,
-  createProfessional: (Professional: IdMongo)=> Promise<Professional | null>,
+  createProfessional: (Professional: Professional)=> Promise<Professional | null>,
   getProfessionalById: (ProfessionalId: IdMongo) => Promise<Professional | null>,
   updateProfessional: (ProfessionalId:IdMongo, body: Partial<Professional>) => Promise<Professional | null>,
   deleteProfessional: (ProfessionalId: IdMongo) => Promise<string>,
@@ -38,9 +38,7 @@ class ProfessionalRepository implements IProfessionalRepository{
       nextPage: professionalDocuments.nextPage,
     };
   }
-  async createProfessional(id: IdMongo):Promise<Professional | null>{
-    let pid : IdMongo = new mongoose.Types.ObjectId(id)
-    let body = {user_id: pid}
+  async createProfessional(body: Professional):Promise<Professional | null>{
     const newProfessional :Professional = await professionalSchema.create(body)
     if(!newProfessional) throw new Error('A problem occurred when the Professional was created')
     return {
@@ -58,7 +56,8 @@ class ProfessionalRepository implements IProfessionalRepository{
     }
   }
   async updateProfessional(id: IdMongo, body :Partial<Professional>):Promise<Professional|null>{
-    const updatedProfessional = await professionalSchema.findByIdAndUpdate(id, body)
+    const updatedProfessional = await professionalSchema.findByIdAndUpdate(id, body, 
+      { new: true, runValidators: true })
     if(!updatedProfessional) throw new Error('A problem occurred when the Professional was updated')
     
     return {

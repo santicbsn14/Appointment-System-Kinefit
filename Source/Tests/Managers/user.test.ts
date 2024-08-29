@@ -15,7 +15,7 @@ const mockUserRepository = {
 }
 
 // Mock del container
-vi.mock('../container', () => ({
+vi.mock('../../container', () => ({
   default: {
     resolve: vi.fn(() => mockUserRepository)
   }
@@ -107,6 +107,7 @@ describe('UserManager', () => {
         password: 'password123',
         _id: new mongoose.Types.ObjectId('66c65b651bb4017c5a0f3d15'),
       }
+      // @ts-ignore entorno de testing
       await userManager.updateUser(userData, userData._id)
       expect(mockUserRepository.updateUser).toHaveBeenCalledWith(userData, userData._id)
     })

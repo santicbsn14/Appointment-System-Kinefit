@@ -65,7 +65,8 @@ class MedicalRecordRepository implements IMedicalRecordRepository{
         }
     }
     async updateMedicalRecord(id: IdMongo, body :Partial<MedicalRecord>):Promise<MedicalRecord|null>{
-      const updatedMedicalRecord = await medicalRecordSchema.findByIdAndUpdate(id, body)
+      const updatedMedicalRecord = await medicalRecordSchema.findByIdAndUpdate(id, body, 
+        { new: true, runValidators: true })
       if(!updatedMedicalRecord) throw new Error('A problem occurred when the MedicalRecord was updated')
       
         return {

@@ -1,89 +1,93 @@
 import mongoose, { PaginateResult } from 'mongoose';
-import professionalTimesSlotsSchema, {ProfessionalTimesSlots} from '../Models/professionalTimeSlotsSchema';
+import professionalTimeSlotsSchema, {ProfessionalTimeSlots} from '../Models/professionalTimeSlotsSchema';
 import { Paginated, Criteria, IdMongo } from '../../Utils/Types/typesMongoose';
 
 interface IProfessionalTimeSlotsRepository{
-    getAll: (criteria :Criteria)=> Promise<Paginated<ProfessionalTimesSlots>| null>,
-    createProfessionalTimesSlots: (professionalTimesSlots: ProfessionalTimesSlots)=> Promise<ProfessionalTimesSlots | null>,
-    getProfessionalTimesSlotsById: (professionalTimesSlotsId: IdMongo) => Promise<ProfessionalTimesSlots | null>,
-    updateProfessionalTimesSlots: (professionalTimesSlotsId:IdMongo, body: Partial<ProfessionalTimesSlots>) => Promise<ProfessionalTimesSlots | null>,
-    deleteProfessionalTimesSlots: (professionalTimesSlotsId: IdMongo) => Promise<string>,
+    getAll: (criteria :Criteria)=> Promise<Paginated<ProfessionalTimeSlots>| null>,
+    createProfessionalTimeSlots: (professionalTimeSlots: ProfessionalTimeSlots)=> Promise<ProfessionalTimeSlots | null>,
+    getProfessionalTimeSlotsById: (professionalTimeSlotsId: IdMongo) => Promise<ProfessionalTimeSlots | null>,
+    getProfessionalTimeSlotsByPro: (professional_id: IdMongo) =>Promise<ProfessionalTimeSlots | null>,
+    updateProfessionalTimeSlots: (professionalTimeSlotsId:IdMongo, body: Partial<ProfessionalTimeSlots>) => Promise<ProfessionalTimeSlots | null>,
+    deleteProfessionalTimeSlots: (professionalTimeSlotsId: IdMongo) => Promise<string>
 }
 
-class ProfessionalTimesSlotsRepository implements IProfessionalTimeSlotsRepository{
-    async getAll(criteria: Criteria):Promise<Paginated<ProfessionalTimesSlots>| null> {
+class ProfessionalTimeSlotsRepository implements IProfessionalTimeSlotsRepository{
+    async getAll(criteria: Criteria):Promise<Paginated<ProfessionalTimeSlots>| null> {
       let { limit = 30, page = 1 } = criteria;
       //@ts-ignore se vera luego...
-      const professionalTimesSlotsDocuments:PaginateResult<ProfessionalTimesSlots> = await professionalTimesSlotsSchema.paginate({}, { limit, page });
+      const professionalTimeSlotssDocuments:PaginateResult<ProfessionalTimeSlots> = await professionalTimeSlotsSchema.paginate({}, { limit, page });
   
-      if(!professionalTimesSlotsDocuments) throw new Error('ProfessionalTimesSlotss could not be accessed')
-      if(!professionalTimesSlotsDocuments.page) professionalTimesSlotsDocuments.page = 1
+      if(!professionalTimeSlotssDocuments) throw new Error('ProfessionalTimeSlotss could not be accessed')
+      if(!professionalTimeSlotssDocuments.page) professionalTimeSlotssDocuments.page = 1
   
-      const mappedProfessionalTimesSlots = professionalTimesSlotsDocuments.docs.map((professionalTimesSlot) => {
+      const mappedProfessionalTimeSlots = professionalTimeSlotssDocuments.docs.map((professionalTimeSlots) => {
         return {
-            _id: professionalTimesSlot._id,
-            professional_id: professionalTimesSlot.professional_id,
-            week_day: professionalTimesSlot.week_day,
-            start_time: professionalTimesSlot.start_time,
-            end_time: professionalTimesSlot.end_time,
-            state: professionalTimesSlot.state
+            _id: professionalTimeSlots._id,
+            professional_id: professionalTimeSlots.professional_id,
+            schedule:professionalTimeSlots.schedule,
+            state: professionalTimeSlots.state
         }
       })
       return {
-        docs: mappedProfessionalTimesSlots ,
-        totalDocs: professionalTimesSlotsDocuments.totalDocs,
-        limit: professionalTimesSlotsDocuments.limit,
-        totalPages:professionalTimesSlotsDocuments.totalPages,
-        pagingCounter: professionalTimesSlotsDocuments.pagingCounter,
-        hasPrevPage: professionalTimesSlotsDocuments.hasPrevPage,
-        hasNextPage: professionalTimesSlotsDocuments.hasNextPage,
-        page: professionalTimesSlotsDocuments.page,
-        prevPage: professionalTimesSlotsDocuments.prevPage,
-        nextPage: professionalTimesSlotsDocuments.nextPage,
+        docs: mappedProfessionalTimeSlots ,
+        totalDocs: professionalTimeSlotssDocuments.totalDocs,
+        limit: professionalTimeSlotssDocuments.limit,
+        totalPages:professionalTimeSlotssDocuments.totalPages,
+        pagingCounter: professionalTimeSlotssDocuments.pagingCounter,
+        hasPrevPage: professionalTimeSlotssDocuments.hasPrevPage,
+        hasNextPage: professionalTimeSlotssDocuments.hasNextPage,
+        page: professionalTimeSlotssDocuments.page,
+        prevPage: professionalTimeSlotssDocuments.prevPage,
+        nextPage: professionalTimeSlotssDocuments.nextPage,
       };
     }
-    async createProfessionalTimesSlots(body: ProfessionalTimesSlots):Promise<ProfessionalTimesSlots | null>{
-      const newProfessionalTimesSlot :ProfessionalTimesSlots = await professionalTimesSlotsSchema.create(body)
-      if(!newProfessionalTimesSlot) throw new Error('A problem occurred when the ProfessionalTimesSlots was created')
+    async createProfessionalTimeSlots(body: ProfessionalTimeSlots):Promise<ProfessionalTimeSlots | null>{
+      const newProfessionalTimeSlots :ProfessionalTimeSlots = await professionalTimeSlotsSchema.create(body)
+      if(!newProfessionalTimeSlots) throw new Error('A problem occurred when the ProfessionalTimeSlots was created')
         return {
-            _id: newProfessionalTimesSlot._id,
-            professional_id: newProfessionalTimesSlot.professional_id,
-            week_day: newProfessionalTimesSlot.week_day,
-            start_time: newProfessionalTimesSlot.start_time,
-            end_time: newProfessionalTimesSlot.end_time,
-            state: newProfessionalTimesSlot.state
+            _id: newProfessionalTimeSlots._id,
+            professional_id: newProfessionalTimeSlots.professional_id,
+            schedule: newProfessionalTimeSlots.schedule,
+            state: newProfessionalTimeSlots.state
         }
     }
-    async getProfessionalTimesSlotsById(id: IdMongo):Promise<ProfessionalTimesSlots|null>{
+    async getProfessionalTimeSlotsById(id: IdMongo):Promise<ProfessionalTimeSlots|null>{
   
-      const ProfessionalTimesSlot = await professionalTimesSlotsSchema.findById(id)
-      if(!ProfessionalTimesSlot) throw new Error('ProfessionalTimesSlots could not found')
+      const ProfessionalTimeSlots = await professionalTimeSlotsSchema.findById(id)
+      if(!ProfessionalTimeSlots) throw new Error('ProfessionalTimeSlots could not found')
         return {
-            _id: ProfessionalTimesSlot._id,
-            professional_id: ProfessionalTimesSlot.professional_id,
-            week_day: ProfessionalTimesSlot.week_day,
-            start_time: ProfessionalTimesSlot.start_time,
-            end_time: ProfessionalTimesSlot.end_time,
-            state: ProfessionalTimesSlot.state
+            _id: ProfessionalTimeSlots._id,
+            professional_id: ProfessionalTimeSlots.professional_id,
+            schedule: ProfessionalTimeSlots.schedule,
+            state: ProfessionalTimeSlots.state
         }
     }
-    async updateProfessionalTimesSlots(id: IdMongo, body :Partial<ProfessionalTimesSlots>):Promise<ProfessionalTimesSlots|null>{
-      const updatedProfessionalTimesSlot = await professionalTimesSlotsSchema.findByIdAndUpdate(id, body)
-      if(!updatedProfessionalTimesSlot) throw new Error('A problem occurred when the ProfessionalTimesSlots was updated')
+    async getProfessionalTimeSlotsByPro(professional_id: IdMongo):Promise<ProfessionalTimeSlots| null>{
+      const ProfessionalTimeSlots  = await professionalTimeSlotsSchema.findOne({professional_id: professional_id})
+      if(!ProfessionalTimeSlots) throw new Error('ProfessionalTimeSlots could not found')
+      return {
+        _id: ProfessionalTimeSlots._id,
+        professional_id: ProfessionalTimeSlots.professional_id,
+        schedule: ProfessionalTimeSlots.schedule,
+        state: ProfessionalTimeSlots.state
+    }
+    }
+    async updateProfessionalTimeSlots(id: IdMongo, body :Partial<ProfessionalTimeSlots>):Promise<ProfessionalTimeSlots|null>{
+      const updatedProfessionalTimeSlots = await professionalTimeSlotsSchema.findByIdAndUpdate(id, body, 
+        { new: true, runValidators: true })
+      if(!updatedProfessionalTimeSlots) throw new Error('A problem occurred when the ProfessionalTimeSlots was updated')
       
         return {
-            _id: updatedProfessionalTimesSlot._id,
-            professional_id: updatedProfessionalTimesSlot.professional_id,
-            week_day: updatedProfessionalTimesSlot.week_day,
-            start_time: updatedProfessionalTimesSlot.start_time,
-            end_time: updatedProfessionalTimesSlot.end_time,
-            state: updatedProfessionalTimesSlot.state
+            _id: updatedProfessionalTimeSlots._id,
+            professional_id: updatedProfessionalTimeSlots.professional_id,
+            schedule: updatedProfessionalTimeSlots.schedule,
+            state: updatedProfessionalTimeSlots.state
         }
     }
-    async deleteProfessionalTimesSlots(id:IdMongo):Promise<string>{
-      const ProfessionalTimesSlotsDeleted = await professionalTimesSlotsSchema.findByIdAndDelete(id)
-      if(!ProfessionalTimesSlotsDeleted) throw new Error('A problem occurred when the ProfessionalTimesSlots was deleted')
-        return `ProfessionalTimesSlots with ID ${id} has been successfully deleted.`;
+    async deleteProfessionalTimeSlots(id:IdMongo):Promise<string>{
+      const ProfessionalTimeSlotsDeleted = await professionalTimeSlotsSchema.findByIdAndDelete(id)
+      if(!ProfessionalTimeSlotsDeleted) throw new Error('A problem occurred when the ProfessionalTimeSlots was deleted')
+        return `ProfessionalTimeSlots with ID ${id} has been successfully deleted.`;
     }
   }
-  export default ProfessionalTimesSlotsRepository
+  export default ProfessionalTimeSlotsRepository

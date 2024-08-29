@@ -16,7 +16,7 @@ container.register({
     PatientRepository: asClass(PatientRepository, { lifetime: Lifetime.SINGLETON }),
     NotificationRepository: asClass(NotificationRepository, { lifetime: Lifetime.SINGLETON }),
     AppointmentRepository: asClass(AppointmentRepository, { lifetime: Lifetime.SINGLETON }),
-    ProfessionalTimesSlots: asClass(ProfessionalTimesSlotsRepository, { lifetime: Lifetime.SINGLETON }),
+    ProfessionalTimeSlotsRepository: asClass(ProfessionalTimesSlotsRepository, { lifetime: Lifetime.SINGLETON }),
     MedicalRecordRepository: asClass(MedicalRecordRepository, { lifetime: Lifetime.SINGLETON }),
     ScheduledSessionsRepository: asClass(ScheduledSessionsRepository, { lifetime: Lifetime.SINGLETON })
 });

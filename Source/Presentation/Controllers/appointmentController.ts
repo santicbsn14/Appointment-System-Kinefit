@@ -2,11 +2,10 @@ import { NextFunction, Response } from "express";
 import { Appointment } from "../../Data/Models/appointmentSchema";
 import AppointmentManager from "../../Domain/Manager/appointmentManager";
 import { IdMongo, Criteria } from "typesMongoose";
-import mongoose from "mongoose";
 import { CreateAppointmentDto } from "typesRequestDtos";
 
 
-export const createAppointment = async (req: CustomRequest<CreateAppointmentDto>, res: Response, next: NextFunction) => {
+export const createAppointmentByPatient = async (req: CustomRequest<CreateAppointmentDto>, res: Response, next: NextFunction) => {
     try {
         const manager = new AppointmentManager();
         
@@ -15,13 +14,31 @@ export const createAppointment = async (req: CustomRequest<CreateAppointmentDto>
         }
 
         const appointmentData: CreateAppointmentDto = req.body;
-        const createdAppointment = await manager.createAppointment(appointmentData);
+        const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
         
         res.status(201).json(createdAppointment);
     } catch (error) {
         next(error);
     }
 };
+
+export const createAppointmentByProfessional = async (req: CustomRequest<CreateAppointmentDto>, res: Response, next: NextFunction) => {
+    try {
+        const manager = new AppointmentManager();
+        
+        if (!req.body) {
+            throw new Error('Request body is empty');
+        }
+
+        const appointmentData: CreateAppointmentDto = req.body;
+        const createdAppointment = await manager.createAppointmentByProfessional(appointmentData);
+        
+        res.status(201).json(createdAppointment);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const getAll = async (req: CustomRequest, res: Response, next: NextFunction)=>
     {
         try

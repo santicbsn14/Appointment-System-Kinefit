@@ -58,7 +58,7 @@ class AppointmentRepository {
         };
     }
     async updateAppointment(id, body) {
-        const updatedAppointment = await appointmentSchema.findByIdAndUpdate(id, body);
+        const updatedAppointment = await appointmentSchema.findByIdAndUpdate(id, body, { new: true, runValidators: true });
         if (!updatedAppointment)
             throw new Error('A problem occurred when the Appointment was updated');
         return {

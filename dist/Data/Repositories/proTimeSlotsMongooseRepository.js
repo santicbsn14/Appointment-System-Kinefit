@@ -1,80 +1,83 @@
-import professionalTimesSlotsSchema from '../Models/professionalTimeSlotsSchema.js';
-class ProfessionalTimesSlotsRepository {
+import professionalTimeSlotsSchema from '../Models/professionalTimeSlotsSchema.js';
+class ProfessionalTimeSlotsRepository {
     async getAll(criteria) {
         let { limit = 30, page = 1 } = criteria;
         //@ts-ignore se vera luego...
-        const professionalTimesSlotsDocuments = await professionalTimesSlotsSchema.paginate({}, { limit, page });
-        if (!professionalTimesSlotsDocuments)
-            throw new Error('ProfessionalTimesSlotss could not be accessed');
-        if (!professionalTimesSlotsDocuments.page)
-            professionalTimesSlotsDocuments.page = 1;
-        const mappedProfessionalTimesSlots = professionalTimesSlotsDocuments.docs.map((professionalTimesSlot) => {
+        const professionalTimeSlotssDocuments = await professionalTimeSlotsSchema.paginate({}, { limit, page });
+        if (!professionalTimeSlotssDocuments)
+            throw new Error('ProfessionalTimeSlotss could not be accessed');
+        if (!professionalTimeSlotssDocuments.page)
+            professionalTimeSlotssDocuments.page = 1;
+        const mappedProfessionalTimeSlots = professionalTimeSlotssDocuments.docs.map((professionalTimeSlots) => {
             return {
-                _id: professionalTimesSlot._id,
-                professional_id: professionalTimesSlot.professional_id,
-                week_day: professionalTimesSlot.week_day,
-                start_time: professionalTimesSlot.start_time,
-                end_time: professionalTimesSlot.end_time,
-                state: professionalTimesSlot.state
+                _id: professionalTimeSlots._id,
+                professional_id: professionalTimeSlots.professional_id,
+                schedule: professionalTimeSlots.schedule,
+                state: professionalTimeSlots.state
             };
         });
         return {
-            docs: mappedProfessionalTimesSlots,
-            totalDocs: professionalTimesSlotsDocuments.totalDocs,
-            limit: professionalTimesSlotsDocuments.limit,
-            totalPages: professionalTimesSlotsDocuments.totalPages,
-            pagingCounter: professionalTimesSlotsDocuments.pagingCounter,
-            hasPrevPage: professionalTimesSlotsDocuments.hasPrevPage,
-            hasNextPage: professionalTimesSlotsDocuments.hasNextPage,
-            page: professionalTimesSlotsDocuments.page,
-            prevPage: professionalTimesSlotsDocuments.prevPage,
-            nextPage: professionalTimesSlotsDocuments.nextPage,
+            docs: mappedProfessionalTimeSlots,
+            totalDocs: professionalTimeSlotssDocuments.totalDocs,
+            limit: professionalTimeSlotssDocuments.limit,
+            totalPages: professionalTimeSlotssDocuments.totalPages,
+            pagingCounter: professionalTimeSlotssDocuments.pagingCounter,
+            hasPrevPage: professionalTimeSlotssDocuments.hasPrevPage,
+            hasNextPage: professionalTimeSlotssDocuments.hasNextPage,
+            page: professionalTimeSlotssDocuments.page,
+            prevPage: professionalTimeSlotssDocuments.prevPage,
+            nextPage: professionalTimeSlotssDocuments.nextPage,
         };
     }
-    async createProfessionalTimesSlots(body) {
-        const newProfessionalTimesSlot = await professionalTimesSlotsSchema.create(body);
-        if (!newProfessionalTimesSlot)
-            throw new Error('A problem occurred when the ProfessionalTimesSlots was created');
+    async createProfessionalTimeSlots(body) {
+        const newProfessionalTimeSlots = await professionalTimeSlotsSchema.create(body);
+        if (!newProfessionalTimeSlots)
+            throw new Error('A problem occurred when the ProfessionalTimeSlots was created');
         return {
-            _id: newProfessionalTimesSlot._id,
-            professional_id: newProfessionalTimesSlot.professional_id,
-            week_day: newProfessionalTimesSlot.week_day,
-            start_time: newProfessionalTimesSlot.start_time,
-            end_time: newProfessionalTimesSlot.end_time,
-            state: newProfessionalTimesSlot.state
+            _id: newProfessionalTimeSlots._id,
+            professional_id: newProfessionalTimeSlots.professional_id,
+            schedule: newProfessionalTimeSlots.schedule,
+            state: newProfessionalTimeSlots.state
         };
     }
-    async getProfessionalTimesSlotsById(id) {
-        const ProfessionalTimesSlot = await professionalTimesSlotsSchema.findById(id);
-        if (!ProfessionalTimesSlot)
-            throw new Error('ProfessionalTimesSlots could not found');
+    async getProfessionalTimeSlotsById(id) {
+        const ProfessionalTimeSlots = await professionalTimeSlotsSchema.findById(id);
+        if (!ProfessionalTimeSlots)
+            throw new Error('ProfessionalTimeSlots could not found');
         return {
-            _id: ProfessionalTimesSlot._id,
-            professional_id: ProfessionalTimesSlot.professional_id,
-            week_day: ProfessionalTimesSlot.week_day,
-            start_time: ProfessionalTimesSlot.start_time,
-            end_time: ProfessionalTimesSlot.end_time,
-            state: ProfessionalTimesSlot.state
+            _id: ProfessionalTimeSlots._id,
+            professional_id: ProfessionalTimeSlots.professional_id,
+            schedule: ProfessionalTimeSlots.schedule,
+            state: ProfessionalTimeSlots.state
         };
     }
-    async updateProfessionalTimesSlots(id, body) {
-        const updatedProfessionalTimesSlot = await professionalTimesSlotsSchema.findByIdAndUpdate(id, body);
-        if (!updatedProfessionalTimesSlot)
-            throw new Error('A problem occurred when the ProfessionalTimesSlots was updated');
+    async getProfessionalTimeSlotsByPro(professional_id) {
+        const ProfessionalTimeSlots = await professionalTimeSlotsSchema.findOne({ professional_id: professional_id });
+        if (!ProfessionalTimeSlots)
+            throw new Error('ProfessionalTimeSlots could not found');
         return {
-            _id: updatedProfessionalTimesSlot._id,
-            professional_id: updatedProfessionalTimesSlot.professional_id,
-            week_day: updatedProfessionalTimesSlot.week_day,
-            start_time: updatedProfessionalTimesSlot.start_time,
-            end_time: updatedProfessionalTimesSlot.end_time,
-            state: updatedProfessionalTimesSlot.state
+            _id: ProfessionalTimeSlots._id,
+            professional_id: ProfessionalTimeSlots.professional_id,
+            schedule: ProfessionalTimeSlots.schedule,
+            state: ProfessionalTimeSlots.state
         };
     }
-    async deleteProfessionalTimesSlots(id) {
-        const ProfessionalTimesSlotsDeleted = await professionalTimesSlotsSchema.findByIdAndDelete(id);
-        if (!ProfessionalTimesSlotsDeleted)
-            throw new Error('A problem occurred when the ProfessionalTimesSlots was deleted');
-        return `ProfessionalTimesSlots with ID ${id} has been successfully deleted.`;
+    async updateProfessionalTimeSlots(id, body) {
+        const updatedProfessionalTimeSlots = await professionalTimeSlotsSchema.findByIdAndUpdate(id, body, { new: true, runValidators: true });
+        if (!updatedProfessionalTimeSlots)
+            throw new Error('A problem occurred when the ProfessionalTimeSlots was updated');
+        return {
+            _id: updatedProfessionalTimeSlots._id,
+            professional_id: updatedProfessionalTimeSlots.professional_id,
+            schedule: updatedProfessionalTimeSlots.schedule,
+            state: updatedProfessionalTimeSlots.state
+        };
+    }
+    async deleteProfessionalTimeSlots(id) {
+        const ProfessionalTimeSlotsDeleted = await professionalTimeSlotsSchema.findByIdAndDelete(id);
+        if (!ProfessionalTimeSlotsDeleted)
+            throw new Error('A problem occurred when the ProfessionalTimeSlots was deleted');
+        return `ProfessionalTimeSlots with ID ${id} has been successfully deleted.`;
     }
 }
-export default ProfessionalTimesSlotsRepository;
+export default ProfessionalTimeSlotsRepository;

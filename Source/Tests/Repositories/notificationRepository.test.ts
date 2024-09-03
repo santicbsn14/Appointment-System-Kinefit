@@ -1,24 +1,26 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import NotificationMongooseRepository from 'Source/Data/Repositories/notificationMongooseRepository';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Notification } from 'Source/Data/Models/notificationSchema';
 
 describe('NotificationMongooseRepository', () => {
     let repository: NotificationMongooseRepository;
     let testNotificationId: mongoose.Types.ObjectId;
-  
+    let mongoServer: MongoMemoryServer;
+
     beforeAll(async () => {
-      // Conectar a una base de datos de prueba
-      await mongoose.connect('mongodb+srv://santicbsn9:9ayNHDJY3GTjdWi2@cluster-sistema-kinefit.gcon33o.mongodb.net/testdb?retryWrites=true&w=majority&appName=Cluster-Sistema-Kinefit');
+      mongoServer = await MongoMemoryServer.create();
+      const uri = mongoServer.getUri();
+      //@ts-ignore
+      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
       repository = new NotificationMongooseRepository();
     });
   
     afterAll(async () => {
-      // Limpiar la base de datos y cerrar la conexión
-      await mongoose.connection.dropDatabase();
-      await mongoose.connection.close();
+      await mongoose.disconnect();
+      await mongoServer.stop();
     });
-  
     it('should create a new notification', async () => {
       const notificationData: Notification = {appointment_id: new mongoose.Types.ObjectId(),
                 type: 'confirmacion',

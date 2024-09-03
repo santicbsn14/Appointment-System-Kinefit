@@ -1,16 +1,19 @@
-// const authorization = (permission) =>
-// {
-//     return async(req, res, next) =>
-//     {
-//         const user = req.user;
+import { NextFunction, Response } from "express";
+
+const authorization = (permission: string) =>
+{
+    return async(req:CustomRequest, res: Response, next: NextFunction) =>
+    {
+        //@ts-ignore
+        const user = req.user;
         
-//         if (!user.isAdmin && !user.role?.permissions?.includes(permission))
-//         {
-//             return res.status(401).send({ message: 'Not authorization!' });
-//         }
+        if (!user.role?.permissions?.includes(permission))
+        {
+            return res.status(401).send({ message: 'Not authorization!' });
+        }
 
-//         next();
-//     }
-// }
+        next();
+    }
+}
 
-// export default authorization;
+export default authorization;

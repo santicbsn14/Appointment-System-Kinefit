@@ -36,7 +36,8 @@ class AppointmentManager {
             schedule: {week_day: bodyDto.schedule.week_day, time_slots:{start_time: dayjs(bodyDto.schedule.time_slots.start_time), end_time: dayjs(bodyDto.schedule.time_slots.end_time)}},
             state:'Solicitado'
         }
-        await createAppointmentValidation.parseAsync(body)
+        // await createAppointmentValidation.parseAsync(body)
+        
         const proTimeSlots : ProfessionalTimeSlots = await this.professionalTimeSlotRepository.getProfessionalTimeSlotsByPro(body.professional_id);
         if (!proTimeSlots) throw new Error('Professional not found');
 
@@ -45,11 +46,11 @@ class AppointmentManager {
 
         const isSlotAvailable = await this.isHourlySlotAvailable(body.date_time, body.schedule.time_slots.start_time, body.professional_id);
         if (!isSlotAvailable) throw new Error('No available slots for the selected time');
-    
+        
         body.state = 'Confirmado';
         return await this.appointmentRepository.createAppointment(body);
     }
-    private async isHourlySlotAvailable(date: dayjs.Dayjs, startTime: dayjs.Dayjs, professional_id?: IdMongo): Promise<boolean> {
+     async isHourlySlotAvailable(date: dayjs.Dayjs, startTime: dayjs.Dayjs, professional_id?: IdMongo): Promise<boolean> {
         const hourlySlots: DailyHourAvailability = await this.dailyHourAvailabilityRepository.getDailyHourAvailabilityByDate(date, professional_id);
         const slotHour = startTime.toDate().getUTCHours(); 
         
@@ -64,7 +65,7 @@ class AppointmentManager {
                     current_sessions: slot.current_sessions + 1,
                 };
                 hourlySlots.hourly_slots = updatedHourlySlots;
-                console.log(hourlySlots)
+                
                 await this.dailyHourAvailabilityRepository.updateDailyHourAvailability(hourlySlots._id, hourlySlots);
                 return true;
             }

@@ -31,32 +31,3 @@ export function isAvailable(
         return isStartTimeValid && isEndTimeValid;
     });
 }
-const professionalSchedule: DaySchedule[] = [
-  {
-      week_day: 1, // Lunes
-      time_slots: {
-          start_time: dayjs('2024-08-30T09:00:00'),
-          end_time: dayjs('2024-08-30T17:00:00')
-      }
-  },
-  {
-      week_day: 2, // Martes
-      time_slots: {
-          start_time: dayjs('2024-08-31T09:00:00'),
-          end_time: dayjs('2024-08-31T17:00:00')
-      }
-  }
-];
-
-// Ejemplo de solicitud del paciente
-const patientRequest: DaySchedule = {
-  week_day: 1, // Lunes
-  time_slots: {
-      start_time: dayjs('2024-08-30T10:00:00'),
-      end_time: dayjs('2024-08-30T11:00:00')
-  }
-};
-
-// Probamos la función
-const isAvailableResult = isAvailable(professionalSchedule, patientRequest);
-console.log('¿Está disponible el horario solicitado?', isAvailableResult);

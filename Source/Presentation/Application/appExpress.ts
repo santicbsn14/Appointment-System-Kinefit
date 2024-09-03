@@ -9,7 +9,6 @@ import DbFactory from '../../Data/Factories/dbFactory.js';
 import userRouter from '../Routes/userRouter';
 import professionalRouter from '../Routes/professionalRouter.js';
 import patientRouter from '../Routes/patientRouter.js';
-import scheduledSessionsRouter from '../Routes/scheduledSessionsRouter.js';
 import appointmentRouter from '../Routes/appointmentRouter.js';
 import medicalRecordRouter from '../Routes/medicalRecRouter.js';
 import professionalTimeSlotsRouter from '../Routes/professionalTimeSlotsRouter.js';
@@ -56,7 +55,6 @@ class AppExpress {
         this.app.use('/api/users', userRouter)
         this.app.use('/api/professionals', professionalRouter)
         this.app.use('/api/patients', patientRouter)
-        this.app.use('/api/scheduledSessions', scheduledSessionsRouter)
         this.app.use('/api/appointments', appointmentRouter)
         this.app.use('/api/medicalRecords', medicalRecordRouter)
         this.app.use('/api/professionalTimeSlots', professionalTimeSlotsRouter)

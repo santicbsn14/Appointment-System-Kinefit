@@ -1,24 +1,26 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import MedicalRecordMongooseRepository from 'Source/Data/Repositories/medicalRecMongooseRepository';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MedicalRecord } from 'Source/Data/Models/medicalRecSchema';
 
 describe('MedicalRecordMongooseRepository', () => {
     let repository: MedicalRecordMongooseRepository;
     let testMedicalRecordId: mongoose.Types.ObjectId;
-  
+    let mongoServer: MongoMemoryServer;
+
     beforeAll(async () => {
-      // Conectar a una base de datos de prueba
-      await mongoose.connect('mongodb+srv://santicbsn9:9ayNHDJY3GTjdWi2@cluster-sistema-kinefit.gcon33o.mongodb.net/testdb?retryWrites=true&w=majority&appName=Cluster-Sistema-Kinefit');
+      mongoServer = await MongoMemoryServer.create();
+      const uri = mongoServer.getUri();
+      //@ts-ignore
+      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
       repository = new MedicalRecordMongooseRepository();
     });
   
     afterAll(async () => {
-      // Limpiar la base de datos y cerrar la conexión
-      await mongoose.connection.dropDatabase();
-      await mongoose.connection.close();
+      await mongoose.disconnect();
+      await mongoServer.stop();
     });
-  
     it('should create a new medicalRecord', async () => {
       const medicalRecordData: MedicalRecord = { pacient_id: new mongoose.Types.ObjectId(),
         last_update: new Date(),

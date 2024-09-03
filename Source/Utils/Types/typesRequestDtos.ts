@@ -16,16 +16,6 @@ export interface CreatePatientDto{
     mutual?: string,
     clinical_data: unknown
 }
-export interface CreateScheduledSessionsDto {
-    professional_id: string;
-    pacient_id: string;
-    session_dates: DaySchedule[];
-    start_date: Date;
-    number_sessions: number;
-    state: string;
-    frequency: string;
-}
-
 export interface CreateProfessionalTimeSlotsDto {
     professional_id: string;
     schedule:DaySchedule[],
@@ -53,5 +43,30 @@ export interface CreateDailyHourAvailabilityDto{
         current_sessions: number;
     }[];
 }
-
-
+export interface CreateRoleDto{
+    name: string,
+    id: string,
+    permissions:string[]
+}
+export interface CreateUserDto{
+    email: string,
+    password: string,
+    firstname: string,
+    lastname: string,
+    username: string,
+    age: number,
+    dni: number,
+    homeAdress: number,
+    role: string,
+    phone: number,
+}
+export interface userAuth {
+    user: {
+        email: string,
+        password: string
+    }
+}
+export type userLogin = {
+    email:string,
+    password: string
+}

@@ -2,8 +2,8 @@ import mongoose, { Schema } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 const patientSchema = new Schema({
     user_id: { type: Schema.Types.ObjectId, index: true, ref: 'users', required: true },
-    mutual: { type: String, required: false }, // Cambiado a String
-    clinical_data: { type: [Schema.Types.Mixed], required: true } // Cambiado a un array de tipo Mixed
+    mutual: { type: String, required: false },
+    clinical_data: { type: [Schema.Types.Mixed], required: true }
 });
 if (process.env.NODE_ENV !== 'test') {
     patientSchema.pre(/^find/, function (next) {

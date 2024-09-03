@@ -6,7 +6,7 @@ import createScheduledSessionsValidation from "../Validations/CreatesValidation/
 import mongoose from "mongoose";
 import { CreateScheduledSessionsDto } from "typesRequestDtos";
 import { ProfessionalTimeSlots } from "Source/Data/Models/professionalTimeSlotsSchema";
-import { isAvailable } from "Source/Utils/scheduleUtils";
+import { isAvailable } from "../../Utils/scheduleUtils";
 
 
 class ScheduledSessionsManager {

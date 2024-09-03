@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import ScheduledSessionsMongooseRepository from 'Source/Data/Repositories/scheduledSessionsMongooseRepository';
+import dayjs from 'dayjs';
 describe('ScheduledSessionsMongooseRepository', () => {
     let repository;
     let testScheduledSessionsId;
@@ -17,7 +18,7 @@ describe('ScheduledSessionsMongooseRepository', () => {
     it('should create a new scheduledSessions', async () => {
         const scheduledSessionsData = { pacient_id: new mongoose.Types.ObjectId(),
             professional_id: new mongoose.Types.ObjectId(),
-            session_dates: [{ week_day: 'Monday', time_slots: { start_time: '8:00hs', end_time: '15:00hs' } }],
+            session_dates: [{ week_day: 1, time_slots: { start_time: dayjs(new Date()), end_time: dayjs(new Date()) } }],
             start_date: new Date(),
             number_sessions: 8,
             state: 'string',

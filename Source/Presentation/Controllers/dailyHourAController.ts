@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { DailyHourAvailability } from "../../Data/Models/dailyHourASchema";
-import DailyHourAvailabilityManager from "Source/Domain/Manager/dailyHourAManager";
+import DailyHourAvailabilityManager from "../../Domain/Manager/dailyHourAManager";
 import { IdMongo, Criteria } from "typesMongoose";
 import mongoose from "mongoose";
 import { CreateDailyHourAvailabilityDto } from "typesRequestDtos";

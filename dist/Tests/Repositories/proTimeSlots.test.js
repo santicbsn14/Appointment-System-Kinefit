@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import ProfessionalTimeSlotsMongooseRepository from 'Source/Data/Repositories/proTimeSlotsMongooseRepository';
+import dayjs from 'dayjs';
 describe('ProfessionalTimeSlotsMongooseRepository', () => {
     let repository;
     let testProfessionalTimeSlotsId;
@@ -17,7 +18,7 @@ describe('ProfessionalTimeSlotsMongooseRepository', () => {
     it('should create a new professionalTimeSlots', async () => {
         const professionalTimeSlotsData = {
             professional_id: new mongoose.Types.ObjectId(),
-            schedule: [{ week_day: 'Monday', time_slots: { start_time: '8:00hs', end_time: '15:00hs' } }],
+            schedule: [{ week_day: 1, time_slots: { start_time: dayjs(new Date()), end_time: dayjs(new Date()) } }],
             state: 'Disponible'
         };
         const result = await repository.createProfessionalTimeSlots(professionalTimeSlotsData);

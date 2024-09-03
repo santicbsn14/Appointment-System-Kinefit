@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import AppointmentMongooseRepository from 'Source/Data/Repositories/appointmentMoongooseRepository';
 import { Appointment } from 'Source/Data/Models/appointmentSchema';
+import dayjs from 'dayjs';
 
 describe('AppointmentMongooseRepository', () => {
     let repository: AppointmentMongooseRepository;
@@ -22,8 +23,8 @@ describe('AppointmentMongooseRepository', () => {
     it('should create a new appointment', async () => {
       const appointmentData: Appointment = { pacient_id: new mongoose.Types.ObjectId(),
         professional_id: new mongoose.Types.ObjectId(),
-        date_time: new Date(),
-        schedule:{week_day:'Monday', time_slots:{start_time:'8:00hs', end_time:'15:00hs'}},
+        date_time: dayjs(new Date()),
+        schedule:{week_day:1, time_slots:{start_time: dayjs(new Date()), end_time:dayjs(new Date())}},
         state: 'Solicitado',
         session_type: 'string'
             }

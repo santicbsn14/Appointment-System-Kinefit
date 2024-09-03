@@ -15,6 +15,7 @@ import medicalRecordRouter from '../Routes/medicalRecRouter.js';
 import professionalTimeSlotsRouter from '../Routes/professionalTimeSlotsRouter.js';
 import notificationRouter from '../Routes/notificationRouter.js';
 import dailyHourAvailabilityRouter from '../Routes/dailyHourARouter.js';
+import sessionRouter from '../Routes/sessionRouter.js';
 
 class AppExpress {
     private app: express.Express;
@@ -56,11 +57,12 @@ class AppExpress {
         this.app.use('/api/professionals', professionalRouter)
         this.app.use('/api/patients', patientRouter)
         this.app.use('/api/scheduledSessions', scheduledSessionsRouter)
-        this.app.use('api/appointments', appointmentRouter)
+        this.app.use('/api/appointments', appointmentRouter)
         this.app.use('/api/medicalRecords', medicalRecordRouter)
         this.app.use('/api/professionalTimeSlots', professionalTimeSlotsRouter)
         this.app.use('/api/notifications', notificationRouter)
         this.app.use('/api/dailyHourAvailability', dailyHourAvailabilityRouter)
+        this.app.use('/api/session', sessionRouter)
     }
 
     listen() {

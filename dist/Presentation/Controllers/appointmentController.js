@@ -1,12 +1,26 @@
 import AppointmentManager from "../../Domain/Manager/appointmentManager.js";
-export const createAppointment = async (req, res, next) => {
+export const createAppointmentByPatient = async (req, res, next) => {
     try {
         const manager = new AppointmentManager();
         if (!req.body) {
             throw new Error('Request body is empty');
         }
         const appointmentData = req.body;
-        const createdAppointment = await manager.createAppointment(appointmentData);
+        const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
+        res.status(201).json(createdAppointment);
+    }
+    catch (error) {
+        next(error);
+    }
+};
+export const createAppointmentByProfessional = async (req, res, next) => {
+    try {
+        const manager = new AppointmentManager();
+        if (!req.body) {
+            throw new Error('Request body is empty');
+        }
+        const appointmentData = req.body;
+        const createdAppointment = await manager.createAppointmentByProfessional(appointmentData);
         res.status(201).json(createdAppointment);
     }
     catch (error) {

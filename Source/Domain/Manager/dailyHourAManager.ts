@@ -5,6 +5,7 @@ import { Criteria, IdMongo } from "../../Utils/Types/typesMongoose";
 // import createDailyHourAvailabilityValidation from "../Validations/CreatesValidation/createDailyHourAvailabilityValidation";
 import { CreateDailyHourAvailabilityDto } from "typesRequestDtos";
 import mongoose from "mongoose";
+import dayjs from "dayjs";
 
 
 
@@ -25,7 +26,7 @@ class DailyHourAvailabilityManager {
     async createDailyHourAvailability(bodyDto:CreateDailyHourAvailabilityDto){
         const body: DailyHourAvailability = {
             professional_id: new mongoose.Types.ObjectId(bodyDto.professional_id),
-            date: bodyDto.date,
+            date: dayjs(bodyDto.date).startOf('day'),
             hourly_slots: bodyDto.hourly_slots,
         };
         // await createDailyHourAvailabilityValidation.parseAsync(body)

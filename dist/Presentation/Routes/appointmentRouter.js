@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { createAppointment, deleteOne, getAll, getById, update } from "../Controllers/appointmentController.js";
+import { createAppointmentByPatient, createAppointmentByProfessional, deleteOne, getAll, getById, update } from "../Controllers/appointmentController.js";
 const appointmentRouter = Router();
 appointmentRouter.get('/', getAll);
 appointmentRouter.get('/:id', getById);
-appointmentRouter.post('/', createAppointment);
+appointmentRouter.post('/bypatient', createAppointmentByPatient);
+appointmentRouter.post('/byprofessional', createAppointmentByProfessional);
 appointmentRouter.put('/:id', update);
 appointmentRouter.delete('/:id', deleteOne);
 export default appointmentRouter;

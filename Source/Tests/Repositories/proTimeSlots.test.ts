@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import ProfessionalTimeSlotsMongooseRepository from 'Source/Data/Repositories/proTimeSlotsMongooseRepository';
 import { ProfessionalTimeSlots } from 'Source/Data/Models/professionalTimeSlotsSchema';
+import dayjs from 'dayjs';
 
 
 describe('ProfessionalTimeSlotsMongooseRepository', () => {
@@ -23,7 +24,7 @@ describe('ProfessionalTimeSlotsMongooseRepository', () => {
     it('should create a new professionalTimeSlots', async () => {
       const professionalTimeSlotsData: ProfessionalTimeSlots = {
         professional_id: new mongoose.Types.ObjectId(),
-        schedule:[{week_day:'Monday', time_slots:{start_time:'8:00hs', end_time:'15:00hs'}}],
+        schedule:[{week_day:1, time_slots:{start_time: dayjs(new Date()), end_time:dayjs(new Date())}}],
         state: 'Disponible'
     }
   

@@ -13,6 +13,7 @@ const scheduledSessionsSchema = new Schema({
         }
     ],
     start_date: { type: Date, required: true },
+    next_date: { type: Date },
     number_sessions: { type: Number, required: true },
     frequency: { type: String, required: true },
     state: { type: String, required: true }

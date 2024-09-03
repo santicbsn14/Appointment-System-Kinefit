@@ -1,12 +1,13 @@
 import dailyHourAvailabilitySchema, { DailyHourAvailability } from "../Models/dailyHourASchema";
 import mongoose, { PaginateResult } from 'mongoose';
 import { Paginated, Criteria, IdMongo } from '../../Utils/Types/typesMongoose';
+import dayjs from "dayjs";
 
 interface IDailyHourAvailabilityRepository{
     getAll: (criteria :Criteria)=> Promise<Paginated<DailyHourAvailability>| null>,
     createDailyHourAvailability: (DailyHourAvailability: DailyHourAvailability)=> Promise<DailyHourAvailability | null>,
     getDailyHourAvailabilityById: (DailyHourAvailabilityId: IdMongo) => Promise<DailyHourAvailability | null>,
-    getDailyHourAvailabilityByDate: (date: Date) => Promise<DailyHourAvailability| null| string>,
+    getDailyHourAvailabilityByDate: (date: dayjs.Dayjs) => Promise<DailyHourAvailability| null| string>,
     updateDailyHourAvailability: (DailyHourAvailabilityId:IdMongo, body: Partial<DailyHourAvailability>) => Promise<DailyHourAvailability | null>,
     deleteDailyHourAvailability: (DailyHourAvailabilityId: IdMongo) => Promise<string>,
 }
@@ -62,10 +63,23 @@ class DailyHourAvailabilityRepository implements IDailyHourAvailabilityRepositor
             hourly_slots: dailyHourAvailability.hourly_slots
         }
     }
-    async getDailyHourAvailabilityByDate(date: Date):Promise<DailyHourAvailability|null|string>{
-  
-      let dailyHourAvailability = await dailyHourAvailabilitySchema.findOne({date: date})
-      if(!dailyHourAvailability) return "DailyHourAvailability don't exist" 
+    async getDailyHourAvailabilityByDate(date: dayjs.Dayjs, professional_id?: IdMongo):Promise<DailyHourAvailability|null|string>{
+      let dateOfDay = date.startOf('day')
+      let dailyHourAvailability = await dailyHourAvailabilitySchema.findOne({date: dateOfDay})
+      
+      if(!dailyHourAvailability) {
+          if (!professional_id) {
+            throw new Error("professional_id is required to create a new DailyHourAvailability");
+          }
+             dailyHourAvailability = await dailyHourAvailabilitySchema.create({
+             professional_id: professional_id,
+             date:dayjs(date),
+             hourly_slots:[{hour: date.toDate().getUTCHours(),
+               max_sessions:6,
+               current_sessions:1
+             }]
+           })
+      }
         return {
             _id: dailyHourAvailability._id,
             professional_id: dailyHourAvailability.professional_id,
@@ -77,7 +91,6 @@ class DailyHourAvailabilityRepository implements IDailyHourAvailabilityRepositor
       const updatedDailyHourAvailability = await dailyHourAvailabilitySchema.findByIdAndUpdate(id, body, 
         { new: true, runValidators: true })
       if(!updatedDailyHourAvailability) throw new Error('A problem occurred when the DailyHourAvailability was updated')
-      
         return {
             _id: updatedDailyHourAvailability._id,
             professional_id: updatedDailyHourAvailability.professional_id,

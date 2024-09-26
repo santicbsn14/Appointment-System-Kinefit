@@ -3,7 +3,7 @@ import paginate from 'mongoose-paginate-v2';
 
 export interface MedicalRecord  {
     _id?: mongoose.Types.ObjectId,
-    pacient_id: mongoose.Types.ObjectId,
+    pacient_id: mongoose.Types.ObjectId | string,
     last_update: Date,
     notes: string,
     attachments: string

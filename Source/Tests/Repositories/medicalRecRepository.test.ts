@@ -13,7 +13,7 @@ describe('MedicalRecordMongooseRepository', () => {
       mongoServer = await MongoMemoryServer.create();
       const uri = mongoServer.getUri();
       //@ts-ignore
-      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      await mongoose.connect(uri);
       repository = new MedicalRecordMongooseRepository();
     });
   
@@ -37,7 +37,6 @@ describe('MedicalRecordMongooseRepository', () => {
   
     it('should get a medicalRecord by id', async () => {
       const medicalRecord = await repository.getMedicalRecordById(testMedicalRecordId);
-      console.log(medicalRecord)
       expect(medicalRecord).toBeDefined();
       expect(medicalRecord?._id).toEqual(testMedicalRecordId);
     });

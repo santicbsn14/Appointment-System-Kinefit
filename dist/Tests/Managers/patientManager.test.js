@@ -8,6 +8,9 @@ const mockPatientRepository = {
     updatePatient: vi.fn(),
     deletePatient: vi.fn()
 };
+const mockMedicalRecordRepository = {
+    createMedicalRecord: vi.fn()
+};
 vi.mock('../../container', () => ({
     default: {
         resolve: vi.fn(() => mockPatientRepository)
@@ -40,13 +43,26 @@ describe('PatientManager', () => {
     });
     describe('createPatient', () => {
         it('should call patientRepository.createPatient with valid data', async () => {
-            let patient = { _id: new mongoose.Types.ObjectId(),
-                user_id: new mongoose.Types.ObjectId(),
+            const patientId = '66c65b641bb4017c5a0f3d13';
+            const patient = {
+                user_id: '66c65b641bb4017c5a0f3d14',
                 clinical_data: ['Tuvo diabetes']
             };
-            // @ts-ignore entorno de testing
+            const medicalRecord = {
+                _id: new mongoose.Types.ObjectId(),
+                patient_id: patientId,
+                last_update: new Date(),
+                notes: patient.clinical_data
+            };
+            mockPatientRepository.createPatient.mockResolvedValue(patient);
+            mockMedicalRecordRepository.createMedicalRecord.mockResolvedValue(medicalRecord);
             await patientManager.createPatient(patient);
             expect(mockPatientRepository.createPatient).toHaveBeenCalledWith(patient);
+            expect(mockMedicalRecordRepository.createMedicalRecord).toHaveBeenCalledWith({
+                patient_id: patientId,
+                last_update: expect.any(Date),
+                notes: patient.clinical_data
+            });
         });
         it('should throw an error with invalid id', async () => {
             const invalidId = 'invalid-id';

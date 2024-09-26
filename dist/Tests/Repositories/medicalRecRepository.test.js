@@ -1,18 +1,21 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import MedicalRecordMongooseRepository from 'Source/Data/Repositories/medicalRecMongooseRepository';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 describe('MedicalRecordMongooseRepository', () => {
     let repository;
     let testMedicalRecordId;
+    let mongoServer;
     beforeAll(async () => {
-        // Conectar a una base de datos de prueba
-        await mongoose.connect('mongodb+srv://santicbsn9:9ayNHDJY3GTjdWi2@cluster-sistema-kinefit.gcon33o.mongodb.net/testdb?retryWrites=true&w=majority&appName=Cluster-Sistema-Kinefit');
+        mongoServer = await MongoMemoryServer.create();
+        const uri = mongoServer.getUri();
+        //@ts-ignore
+        await mongoose.connect(uri);
         repository = new MedicalRecordMongooseRepository();
     });
     afterAll(async () => {
-        // Limpiar la base de datos y cerrar la conexión
-        await mongoose.connection.dropDatabase();
-        await mongoose.connection.close();
+        await mongoose.disconnect();
+        await mongoServer.stop();
     });
     it('should create a new medicalRecord', async () => {
         const medicalRecordData = { pacient_id: new mongoose.Types.ObjectId(),
@@ -27,7 +30,6 @@ describe('MedicalRecordMongooseRepository', () => {
     });
     it('should get a medicalRecord by id', async () => {
         const medicalRecord = await repository.getMedicalRecordById(testMedicalRecordId);
-        console.log(medicalRecord);
         expect(medicalRecord).toBeDefined();
         expect(medicalRecord?._id).toEqual(testMedicalRecordId);
     });

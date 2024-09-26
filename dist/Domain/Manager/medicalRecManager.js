@@ -1,7 +1,6 @@
 import container from "../../container.js";
 import idValidation from "../Validations/idValidation.js";
 import createMedicalRecordValidation from "../Validations/CreatesValidation/createMedicalRecValidation.js";
-import mongoose from "mongoose";
 class MedicalRecordManager {
     constructor() {
         this.notificationRepository = container.resolve('MedicalRecordRepository');
@@ -14,7 +13,7 @@ class MedicalRecordManager {
         return await this.notificationRepository.getMedicalRecordById(id);
     }
     async createMedicalRecord(bodyDto) {
-        let body = { ...bodyDto, pacient_id: new mongoose.Types.ObjectId(bodyDto.pacient_id) };
+        let body = { ...bodyDto, pacient_id: bodyDto.pacient_id };
         await createMedicalRecordValidation.parseAsync(body);
         return await this.notificationRepository.createMedicalRecord(body);
     }

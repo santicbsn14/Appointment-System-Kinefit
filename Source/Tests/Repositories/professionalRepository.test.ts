@@ -13,7 +13,7 @@ describe('ProfessionalMongooseRepository', () => {
       mongoServer = await MongoMemoryServer.create();
       const uri = mongoServer.getUri();
       //@ts-ignore
-      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      await mongoose.connect(uri);
       repository = new ProfessionalMongooseRepository();
     });
   
@@ -25,7 +25,8 @@ describe('ProfessionalMongooseRepository', () => {
   
     it('should create a new professional', async () => {
       const professionalData: Professional = {
-        user_id: new mongoose.Types.ObjectId('66c65b641bb4017c5a0f3d14')
+        user_id: new mongoose.Types.ObjectId('66c65b641bb4017c5a0f3d14'),
+        specialties:['Terapia de manos']
       };
   
       const result = await repository.createProfessional(professionalData);

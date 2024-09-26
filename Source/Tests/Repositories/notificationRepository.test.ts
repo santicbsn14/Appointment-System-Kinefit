@@ -13,7 +13,7 @@ describe('NotificationMongooseRepository', () => {
       mongoServer = await MongoMemoryServer.create();
       const uri = mongoServer.getUri();
       //@ts-ignore
-      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      await mongoose.connect(uri);
       repository = new NotificationMongooseRepository();
     });
   
@@ -38,7 +38,7 @@ describe('NotificationMongooseRepository', () => {
   
     it('should get a notification by id', async () => {
       const notification = await repository.getNotificationById(testNotificationId);
-      console.log(notification)
+
       expect(notification).toBeDefined();
       expect(notification?._id).toEqual(testNotificationId);
     });

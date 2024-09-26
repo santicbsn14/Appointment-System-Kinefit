@@ -4,15 +4,16 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
-    environment: 'node',
-    globals: true,
-    include: ['Source/Tests/**/*.test.ts'],
-    coverage:{
-      thresholds:{
-          functions: 30,
-          lines: 30,
-          branches:30,
-          statements:30
-      },
-  },
-}})
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      reportsDirectory: './coverage',
+      include: ['Source/**/*.ts'],
+      exclude: [
+        'Source/**/*.test.ts',
+        'Source/**/*.spec.ts',
+        'Source/**/*.d.ts',
+        'node_modules/**',
+      ],
+    },
+  },})

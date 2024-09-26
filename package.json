@@ -4,7 +4,7 @@
   "description": "sistema para gestionar turnos en consultorio",
   "main": "dist/index.js",
   "scripts": {
-    "test": "vitest",
+    "test": "c8 vitest run --coverage ",
     "test:watch": "vitest --watch",
     "build": "tsc && node add-js-extension.mjs ",
     "start": "nodemon dist/index.js"
@@ -13,6 +13,7 @@
   "author": "Santiago Viale",
   "license": "ISC",
   "dependencies": {
+    "@bot-whatsapp/bot": "^0.1.38",
     "awilix": "^10.0.2",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
@@ -25,9 +26,11 @@
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.3",
     "mongoose-paginate-v2": "^1.8.3",
+    "nodemailer": "^6.9.15",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "vite-tsconfig-paths": "^5.0.1",
+    "winston": "^3.14.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -39,12 +42,15 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.12",
-    "@vitest/coverage-c8": "^0.33.0",
-    "@vitest/ui": "^2.0.5",
+    "@types/nodemailer": "^6.4.15",
+    "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/ui": "^1.4.0",
+    "c8": "^10.1.2",
     "concurrently": "^8.2.2",
     "eslint": "^9.7.0",
     "eslint-plugin-import": "^2.29.1",
     "globals": "^15.8.0",
+    "jsdom": "^25.0.0",
     "mongodb-memory-server": "^10.0.0",
     "nodemon": "^3.1.4",
     "ts-migrate": "^0.1.35",
@@ -52,6 +58,6 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4",
     "typescript-eslint": "^7.17.0",
-    "vitest": "^2.0.5"
+    "vitest": "^1.4.0"
   }
 }

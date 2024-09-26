@@ -3,7 +3,7 @@ import paginate from 'mongoose-paginate-v2';
 export type  NotificationState = 'Pendiente' |'Enviada' | 'Recibida' | 'Cancelada'
 export interface Notification {
     _id?:  mongoose.Types.ObjectId,
-    appointment_id:  mongoose.Types.ObjectId,
+    appointment_id:  mongoose.Types.ObjectId | string,
     type: string,
     state: NotificationState,
     date_send: Date,

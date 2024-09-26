@@ -5,8 +5,8 @@ import { DaySchedule } from './professionalTimeSlotsSchema';
 export type appointmentState = 'Solicitado' |'Confirmado' | 'Completado' | 'Cancelado'
 export interface Appointment {
     _id?: mongoose.Types.ObjectId,
-    pacient_id: mongoose.Types.ObjectId,
-    professional_id: mongoose.Types.ObjectId,
+    pacient_id: mongoose.Types.ObjectId | string,
+    professional_id: mongoose.Types.ObjectId | string,
     date_time: Dayjs,
     schedule: DaySchedule,
     state: appointmentState,

@@ -1,19 +1,22 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import AppointmentMongooseRepository from 'Source/Data/Repositories/appointmentMoongooseRepository';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import dayjs from 'dayjs';
 describe('AppointmentMongooseRepository', () => {
     let repository;
     let testAppointmentId;
+    let mongoServer;
     beforeAll(async () => {
-        // Conectar a una base de datos de prueba
-        await mongoose.connect('mongodb+srv://santicbsn9:9ayNHDJY3GTjdWi2@cluster-sistema-kinefit.gcon33o.mongodb.net/testdb?retryWrites=true&w=majority&appName=Cluster-Sistema-Kinefit');
+        mongoServer = await MongoMemoryServer.create();
+        const uri = mongoServer.getUri();
+        //@ts-ignore
+        await mongoose.connect(uri);
         repository = new AppointmentMongooseRepository();
     });
     afterAll(async () => {
-        // Limpiar la base de datos y cerrar la conexión
-        await mongoose.connection.dropDatabase();
-        await mongoose.connection.close();
+        await mongoose.disconnect();
+        await mongoServer.stop();
     });
     it('should create a new appointment', async () => {
         const appointmentData = { pacient_id: new mongoose.Types.ObjectId(),

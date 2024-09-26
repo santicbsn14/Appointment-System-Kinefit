@@ -3,7 +3,7 @@ import RoleManager from '../../Domain/Manager/roleManager'
 import { CreateRoleDto } from 'typesRequestDtos';
 import { Criteria } from 'typesMongoose';
 
-export const list = async  (req:CustomRequest<CreateRoleDto>, res: Response, next:NextFunction) =>
+export const getAll = async  (req:CustomRequest<CreateRoleDto>, res: Response, next:NextFunction) =>
 {
     const { limit, page }: Criteria = req.query;
     try 
@@ -21,7 +21,7 @@ export const list = async  (req:CustomRequest<CreateRoleDto>, res: Response, nex
 
 };
 
-export const getOne = async (req:CustomRequest<CreateRoleDto>, res: Response, next:NextFunction) =>
+export const getById = async (req:CustomRequest<CreateRoleDto>, res: Response, next:NextFunction) =>
 {
   try 
   {
@@ -39,7 +39,7 @@ export const getOne = async (req:CustomRequest<CreateRoleDto>, res: Response, ne
 
 };
 
-export const save = async (req:CustomRequest<CreateRoleDto>, res: Response, next:NextFunction) =>
+export const create = async (req:CustomRequest<CreateRoleDto>, res: Response, next:NextFunction) =>
 {
   try 
   {

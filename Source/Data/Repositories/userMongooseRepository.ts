@@ -1,6 +1,7 @@
 import mongoose, { PaginateResult } from 'mongoose';
 import userSchema, { IUser, IUserPublic } from '../Models/userSchema';
 import { Paginated, Criteria, IdMongo } from '../../Utils/Types/typesMongoose';
+import { Role } from '../Models/roleSchema';
 
 
 interface userRepository{
@@ -21,7 +22,8 @@ class UserMongooseRepository implements userRepository {
     try {
       let { limit = 30, page = 1 } = criteria;
       
-      const userDocuments: PaginateResult<IUser> = await userSchema.paginate({}, { limit, page });
+      const userDocuments: PaginateResult<IUser> = await userSchema.paginate({}, { limit, page,
+        populate:'role' });
       if(!userDocuments.page) userDocuments.page = 1
       const mappedDocs = userDocuments.docs.map(user => ({
         firstname:user.firstname ,
@@ -55,7 +57,7 @@ class UserMongooseRepository implements userRepository {
     }
   }
   async getUserById(id: IdMongo): Promise<IUserPublic | null>{
-      const user = await userSchema.findById(id)
+      const user = await userSchema.findById(id).populate('role')
       if(user !== null){
       return {
         firstname:user.firstname ,
@@ -66,7 +68,7 @@ class UserMongooseRepository implements userRepository {
         dni: user.dni ,
         homeAdress: user.homeAdress ,
         phone: user.phone ,
-        role: user.role ,
+        role: user.role as unknown as Role,
         status: user.status ,
         id: user._id  ,
       }
@@ -86,7 +88,7 @@ class UserMongooseRepository implements userRepository {
       dni: user.dni ,
       homeAdress: user.homeAdress ,
       phone: user.phone ,
-      role: user.role ,
+      role: user.role as unknown as Role,
       status: user.status ,
       id: user._id  ,
     }
@@ -103,7 +105,7 @@ class UserMongooseRepository implements userRepository {
       dni: user.dni ,
       homeAdress: user.homeAdress ,
       phone: user.phone ,
-      role: user.role ,
+      role: user.role as unknown as Role,
       status: user.status ,
       id: user._id  ,
     }
@@ -122,7 +124,7 @@ class UserMongooseRepository implements userRepository {
         dni: user.dni ,
         homeAdress: user.homeAdress ,
         phone: user.phone ,
-        role: user.role ,
+        role: user.role as unknown as Role,
         status: user.status ,
         id: user._id  ,
       }

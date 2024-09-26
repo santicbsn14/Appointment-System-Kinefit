@@ -11,9 +11,10 @@ import dayjs from "dayjs";
 
 class DailyHourAvailabilityManager {
     private dailyHourAvailabilityRepository
-
+    private professionalRepository
     constructor(){
         this.dailyHourAvailabilityRepository = container.resolve('DailyHourAvailabilityRepository');
+        this.professionalRepository= container.resolve('ProfessionalRepository')
     }
     async getAll(criteria: Criteria){
        return await this.dailyHourAvailabilityRepository.getAll(criteria)
@@ -25,10 +26,12 @@ class DailyHourAvailabilityManager {
     }
     async createDailyHourAvailability(bodyDto:CreateDailyHourAvailabilityDto){
         const body: DailyHourAvailability = {
-            professional_id: new mongoose.Types.ObjectId(bodyDto.professional_id),
+            professional_id: bodyDto.professional_id,
             date: dayjs(bodyDto.date).startOf('day'),
             hourly_slots: bodyDto.hourly_slots,
         };
+        let verifyProfessional = this.professionalRepository.getProfessionalTById(bodyDto.professional_id)
+        if(!verifyProfessional) throw new Error('Professional not found')
         // await createDailyHourAvailabilityValidation.parseAsync(body)
         return await this.dailyHourAvailabilityRepository.createDailyHourAvailability(body)
     }

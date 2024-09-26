@@ -1,9 +1,9 @@
 import container from "../../container.js";
 import idValidation from "../Validations/idValidation.js";
-import mongoose from "mongoose";
 class ProfessionalManager {
     constructor() {
         this.professionalRepository = container.resolve('ProfessionalRepository');
+        this.userRepository = container.resolve('UserRepository');
     }
     async getAll(criteria) {
         return await this.professionalRepository.getAll(criteria);
@@ -13,8 +13,13 @@ class ProfessionalManager {
         return await this.professionalRepository.getProfessionalById(id);
     }
     async createProfessional(bodyDto) {
-        let body = { ...bodyDto, user_id: new mongoose.Types.ObjectId(bodyDto.user_id) };
+        let body = { ...bodyDto, user_id: bodyDto.user_id };
         await idValidation.parseAsync(body.user_id);
+        let verifyUser = await this.userRepository.getUserById(bodyDto.user_id);
+        if (!verifyUser)
+            throw new Error("User don't exist");
+        if (verifyUser.role.name === "patient")
+            throw new Error("Los pacientes no pueden ser profesionales");
         return await this.professionalRepository.createProfessional(body);
     }
     async updateProfessional(body, id) {

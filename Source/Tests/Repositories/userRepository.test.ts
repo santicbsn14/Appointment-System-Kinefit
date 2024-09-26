@@ -13,7 +13,7 @@ describe('UserMongooseRepository', () => {
       mongoServer = await MongoMemoryServer.create();
       const uri = mongoServer.getUri();
       //@ts-ignore
-      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      await mongoose.connect(uri);
       repository = new UserMongooseRepository();
     });
   

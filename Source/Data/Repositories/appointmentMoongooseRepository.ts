@@ -12,9 +12,9 @@ interface IAppointmentRepository{
 
 class AppointmentRepository implements IAppointmentRepository{
     async getAll(criteria: Criteria):Promise<Paginated<Appointment>| null> {
-      let { limit = 30, page = 1 } = criteria;
+      let { limit = 30, page = 1, ...filters } = criteria; // Extrae los filtros
       //@ts-ignore se vera luego...
-      const appointmentDocuments:PaginateResult<Appointment> = await appointmentSchema.paginate({}, { limit, page });
+      const appointmentDocuments:PaginateResult<Appointment> = await appointmentSchema.paginate(filters, { limit, page });
   
       if(!appointmentDocuments) throw new Error('Appointments could not be accessed')
       if(!appointmentDocuments.page) appointmentDocuments.page = 1

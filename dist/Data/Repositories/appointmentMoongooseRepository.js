@@ -1,9 +1,9 @@
 import appointmentSchema from '../Models/appointmentSchema.js';
 class AppointmentRepository {
     async getAll(criteria) {
-        let { limit = 30, page = 1 } = criteria;
+        let { limit = 30, page = 1, ...filters } = criteria; // Extrae los filtros
         //@ts-ignore se vera luego...
-        const appointmentDocuments = await appointmentSchema.paginate({}, { limit, page });
+        const appointmentDocuments = await appointmentSchema.paginate(filters, { limit, page });
         if (!appointmentDocuments)
             throw new Error('Appointments could not be accessed');
         if (!appointmentDocuments.page)

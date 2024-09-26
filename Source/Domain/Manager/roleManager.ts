@@ -6,7 +6,7 @@ class RoleManager
     private roleRepository
   constructor()
   {
-     this.roleRepository = container.resolve('RoleMoongoseRepository')
+     this.roleRepository = container.resolve('RoleRepository')
   }
 
   async paginate(criteria: Criteria)

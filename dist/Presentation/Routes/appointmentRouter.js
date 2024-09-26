@@ -1,10 +1,13 @@
 import { Router } from "express";
-import { createAppointmentByPatient, createAppointmentByProfessional, deleteOne, getAll, getById, update } from "../Controllers/appointmentController.js";
+import { createAppointmentByPatient, createAppointmentByProfessional, createBulkAppointments, deleteOne, getAll, getById, update } from "../Controllers/appointmentController.js";
+import authorization from "../Middlewares/authorization.js";
+import authMiddleware from "../Middlewares/auth.js";
 const appointmentRouter = Router();
 appointmentRouter.get('/', getAll);
 appointmentRouter.get('/:id', getById);
-appointmentRouter.post('/bypatient', createAppointmentByPatient);
-appointmentRouter.post('/byprofessional', createAppointmentByProfessional);
-appointmentRouter.put('/:id', update);
+appointmentRouter.post('/bypatient', authMiddleware, authorization('CreateAppointments'), createAppointmentByPatient);
+appointmentRouter.post('/bulkAppointments', authMiddleware, authorization('CreateBulkAppointments'), createBulkAppointments);
+appointmentRouter.post('/byprofessional', authMiddleware, authorization('CreateAppointments'), createAppointmentByProfessional);
+appointmentRouter.put('/:id', authMiddleware, authorization('UpdateAppointments'), update);
 appointmentRouter.delete('/:id', deleteOne);
 export default appointmentRouter;

@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import { CreateDailyHourAvailabilityDto } from "typesRequestDtos";
 
 
-export const createDailyHourAvailability = async (req: CustomRequest<CreateDailyHourAvailabilityDto>, res: Response, next: NextFunction) => {
+export const createDailyHourAvailability = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const manager = new DailyHourAvailabilityManager();
         

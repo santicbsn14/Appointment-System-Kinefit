@@ -1,4 +1,5 @@
 import AppointmentManager from "../../Domain/Manager/appointmentManager.js";
+import { mailForConfirmAppointment } from "../../Services/mailing.js";
 export const createAppointmentByPatient = async (req, res, next) => {
     try {
         const manager = new AppointmentManager();
@@ -7,6 +8,8 @@ export const createAppointmentByPatient = async (req, res, next) => {
         }
         const appointmentData = req.body;
         const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
+        if (createdAppointment)
+            mailForConfirmAppointment('maritegu@gmail.com');
         res.status(201).json(createdAppointment);
     }
     catch (error) {
@@ -21,6 +24,20 @@ export const createAppointmentByProfessional = async (req, res, next) => {
         }
         const appointmentData = req.body;
         const createdAppointment = await manager.createAppointmentByProfessional(appointmentData);
+        res.status(201).json(createdAppointment);
+    }
+    catch (error) {
+        next(error);
+    }
+};
+export const createBulkAppointments = async (req, res, next) => {
+    try {
+        const manager = new AppointmentManager();
+        if (!req.body) {
+            throw new Error('Request body is empty');
+        }
+        const appointmentData = req.body;
+        const createdAppointment = await manager.createBulkAppointments(appointmentData);
         res.status(201).json(createdAppointment);
     }
     catch (error) {

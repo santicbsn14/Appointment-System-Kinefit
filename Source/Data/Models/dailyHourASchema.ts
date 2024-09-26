@@ -9,7 +9,7 @@ export interface HourlySlot {
 
 export interface DailyHourAvailability {
     _id?: mongoose.Types.ObjectId;
-    professional_id: mongoose.Types.ObjectId;
+    professional_id: mongoose.Types.ObjectId | string;
     date: Dayjs;
     hourly_slots: HourlySlot[];
 }

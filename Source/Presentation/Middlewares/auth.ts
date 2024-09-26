@@ -1,13 +1,13 @@
  import { NextFunction, Response } from 'express';
-import { auth } from 'firebase-admin';
-import { IUser } from 'Source/Data/Models/userSchema';
-import UserManager from 'Source/Domain/Manager/userManager';
+import pkg from 'firebase-admin';
+import { IUser } from '../../Data/Models/userSchema';
+import UserManager from '../../Domain/Manager/userManager';
 import { userAuth } from 'typesRequestDtos';
 
 
 const authMiddleware = async (req: CustomRequest<userAuth>, res: Response, next: NextFunction) => {
     try {
-        
+        const {auth} = pkg
         let token = req.cookies.authToken;
 
         
@@ -37,7 +37,7 @@ const authMiddleware = async (req: CustomRequest<userAuth>, res: Response, next:
 
         next();
     } catch (error) {
-        console.error('Error verifying token:', error);
+        next(error);
         res.status(403).json({ message: 'Invalid or expired token' });
     }
 };

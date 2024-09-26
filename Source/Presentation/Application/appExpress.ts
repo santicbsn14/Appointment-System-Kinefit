@@ -15,12 +15,23 @@ import professionalTimeSlotsRouter from '../Routes/professionalTimeSlotsRouter.j
 import notificationRouter from '../Routes/notificationRouter.js';
 import dailyHourAvailabilityRouter from '../Routes/dailyHourARouter.js';
 import sessionRouter from '../Routes/sessionRouter.js';
+import errorHandler from '../Middlewares/errorHandler.js';
+import customLogger from '../../Services/logger.js';
+import roleRouter from '../Routes/roleRouter.js';
 
 class AppExpress {
     private app: express.Express;
     private server: import('http').Server | null = null;  // Cambiado el tipo de server
-
     constructor() {
+        process.on('uncaughtException', (err) => {
+            customLogger.error(`Uncaught Exception: ${err.message}`, { stack: err.stack });
+            process.exit(1); // Dependiendo de la gravedad, podrías querer reiniciar el proceso
+          });
+          
+          process.on('unhandledRejection', (reason, promise) => {
+            customLogger.error('Unhandled Rejection', { reason });
+            // Puedes decidir si quieres cerrar el servidor o manejarlo de otra forma
+          });
         this.app = express();
         this.init();
         this.build();
@@ -43,10 +54,12 @@ class AppExpress {
         await db.init(process.env.DB_URI);
     }
 
+
     close() {
         if (this.server) {
-            this.server.close(() => {
+            this.server.close(async () => {
                 console.log('Server closed');
+                process.exit(0);
             });
         }
     }
@@ -61,6 +74,8 @@ class AppExpress {
         this.app.use('/api/notifications', notificationRouter)
         this.app.use('/api/dailyHourAvailability', dailyHourAvailabilityRouter)
         this.app.use('/api/session', sessionRouter)
+        this.app.use('/api/roles', roleRouter)
+        this.app.use(errorHandler)
     }
 
     listen() {

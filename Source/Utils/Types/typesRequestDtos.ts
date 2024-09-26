@@ -1,24 +1,35 @@
 
+import mongoose, { ObjectId } from "mongoose";
 import { DaySchedule } from "Source/Data/Models/professionalTimeSlotsSchema";
 export interface CreateAppointmentDto {
-    pacient_id: string;          
-    professional_id: string;     
+    pacient_id: mongoose.Types.ObjectId | string;          
+    professional_id: mongoose.Types.ObjectId | string;     
     date_time: Date;
     schedule: DaySchedule;             
     state: string;               
     session_type: string;        
 }
 export interface CreateProfessionalDto{
-    user_id: string
+    user_id:  mongoose.Types.ObjectId | string,
+    specialties: string[]
 }
 export interface CreatePatientDto{
-    user_id: string,
+    user_id: mongoose.Types.ObjectId | string,
     mutual?: string,
     clinical_data: unknown
 }
+export interface TimeSlot {
+    start_time: string;
+    end_time: number;
+}
+
+export interface DayScheduleDto {
+    week_day: number; 
+    time_slots: TimeSlot;
+}
 export interface CreateProfessionalTimeSlotsDto {
-    professional_id: string;
-    schedule:DaySchedule[],
+    professional_id: mongoose.Types.ObjectId | string,
+    schedule:DayScheduleDto[],
     state: string;
 }
 export interface CreateMedicalRecordDto{
@@ -28,14 +39,14 @@ export interface CreateMedicalRecordDto{
     attachments: string
 }
 export interface CreateNotificationDto{
-    appointment_id:  string,
+    appointment_id:  mongoose.Types.ObjectId | string,
     type: string,
     state: string,
     date_send: Date,
     note: string
 }
 export interface CreateDailyHourAvailabilityDto{
-    professional_id: string;
+    professional_id: mongoose.Types.ObjectId | string,
     date: Date;
     hourly_slots: {
         hour: number; // 0-23
@@ -45,7 +56,7 @@ export interface CreateDailyHourAvailabilityDto{
 }
 export interface CreateRoleDto{
     name: string,
-    id: string,
+    id?: string,
     permissions:string[]
 }
 export interface CreateUserDto{
@@ -57,7 +68,7 @@ export interface CreateUserDto{
     age: number,
     dni: number,
     homeAdress: number,
-    role: string,
+    role: mongoose.Types.ObjectId | string,
     phone: number,
 }
 export interface userAuth {

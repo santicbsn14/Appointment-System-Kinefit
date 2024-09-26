@@ -14,7 +14,7 @@ export interface DaySchedule {
 
 export interface ProfessionalTimeSlots {
     _id?: mongoose.Types.ObjectId;
-    professional_id: mongoose.Types.ObjectId;
+    professional_id: mongoose.Types.ObjectId | string;
     schedule: DaySchedule[];
     state: 'Disponible' | 'No disponible' | 'Vacaciones' | 'Feriado' | 'Licencia';
     date_range?: {

@@ -21,6 +21,7 @@ class PatientRepository implements IPatientRepository{
 
     const mappedPatients = patientDocuments.docs.map((patient) => {
       return {
+        _id: patient._id,
         user_id: patient._id,
         mutual: patient.mutual ? patient.mutual : null,
         clinical_data: patient.clinical_data

@@ -1,22 +1,26 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import ProfessionalMongooseRepository from 'Source/Data/Repositories/professionalMongooseRepository';
 describe('ProfessionalMongooseRepository', () => {
     let repository;
     let testProfessionalId;
+    let mongoServer;
     beforeAll(async () => {
-        // Conectar a una base de datos de prueba
-        await mongoose.connect('mongodb+srv://santicbsn9:9ayNHDJY3GTjdWi2@cluster-sistema-kinefit.gcon33o.mongodb.net/testdb?retryWrites=true&w=majority&appName=Cluster-Sistema-Kinefit');
+        mongoServer = await MongoMemoryServer.create();
+        const uri = mongoServer.getUri();
+        //@ts-ignore
+        await mongoose.connect(uri);
         repository = new ProfessionalMongooseRepository();
     });
     afterAll(async () => {
-        // Limpiar la base de datos y cerrar la conexión
-        await mongoose.connection.dropDatabase();
-        await mongoose.connection.close();
+        await mongoose.disconnect();
+        await mongoServer.stop();
     });
     it('should create a new professional', async () => {
         const professionalData = {
-            user_id: new mongoose.Types.ObjectId('66c65b641bb4017c5a0f3d14')
+            user_id: new mongoose.Types.ObjectId('66c65b641bb4017c5a0f3d14'),
+            specialties: ['Terapia de manos']
         };
         const result = await repository.createProfessional(professionalData);
         expect(result).toBeDefined();

@@ -1,7 +1,7 @@
 import container from "../../container";
 import { IUser } from "../../Data/Models/userSchema";
 import { Criteria, IdMongo, Paginated } from "../../Utils/Types/typesMongoose";
-import pkg, { auth } from "firebase-admin";
+import pkg from "firebase-admin";
 import emailValidation from "../Validations/emailValidation";
 import idValidation from "../Validations/idValidation";
 import createUserValidation from "../Validations/CreatesValidation/createUserValidation";
@@ -19,6 +19,8 @@ class UserManager {
         return await this.userRepository.getUserByEmail(email)
     }
     async signup(bodyUser: CreateUserDto){
+        let user :IUser = await this.userRepository.createUser(bodyUser)
+        if(user){
         const {auth} = pkg
         let userResponse = await auth().createUser({
             email: bodyUser.email,
@@ -27,13 +29,12 @@ class UserManager {
             disabled: false
         });
         
-
-        let user :IUser = await this.userRepository.createUser(bodyUser)
-        return user 
+        return user
+    } 
     }
     async login(logindto: userLogin){
+        let {auth} = pkg
         let userResponse = await auth().getUserByEmail(logindto.email)
-
     }
     async updateUser(body:IUser, id:IdMongo){
         await updateUserValidation.parseAsync({...body, id})

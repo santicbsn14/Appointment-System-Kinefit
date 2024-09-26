@@ -22,7 +22,7 @@ class MedicalRecordManager {
         return await this.notificationRepository.getMedicalRecordById(id)
     }
     async createMedicalRecord(bodyDto:CreateMedicalRecordDto){
-        let body : MedicalRecord = {...bodyDto, pacient_id: new mongoose.Types.ObjectId(bodyDto.pacient_id)}
+        let body : MedicalRecord = {...bodyDto, pacient_id: bodyDto.pacient_id}
         await createMedicalRecordValidation.parseAsync(body)
         return await this.notificationRepository.createMedicalRecord(body)
     }

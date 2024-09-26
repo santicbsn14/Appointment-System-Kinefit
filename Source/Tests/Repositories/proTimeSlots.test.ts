@@ -15,7 +15,7 @@ describe('ProfessionalTimeSlotsMongooseRepository', () => {
       mongoServer = await MongoMemoryServer.create();
       const uri = mongoServer.getUri();
       //@ts-ignore
-      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      await mongoose.connect(uri);
       repository = new ProfessionalTimeSlotsMongooseRepository();
     });
   
@@ -40,7 +40,7 @@ describe('ProfessionalTimeSlotsMongooseRepository', () => {
   
     it('should get a professionalTimeSlots by id', async () => {
       const professionalTimeSlots = await repository.getProfessionalTimeSlotsById(testProfessionalTimeSlotsId);
-      console.log(professionalTimeSlots)
+      
       expect(professionalTimeSlots).toBeDefined();
       expect(professionalTimeSlots?._id).toEqual(testProfessionalTimeSlotsId);
     });

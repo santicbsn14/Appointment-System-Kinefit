@@ -9,6 +9,7 @@ import AppointmentRepository from './Data/Repositories/appointmentMoongooseRepos
 import ProfessionalTimesSlotsRepository from './Data/Repositories/proTimeSlotsMongooseRepository.js';
 import MedicalRecordRepository from './Data/Repositories/medicalRecMongooseRepository.js';
 import DailyHourAvailabilityRepository from './Data/Repositories/dailyHourARepositoryMongoose.js';
+import RoleMongooseRepository from './Data/Repositories/roleMoongoseRepository.js';
 const container = createContainer();
 container.register({
     UserRepository: asClass(UserRepository, { lifetime: Lifetime.SINGLETON }),
@@ -18,6 +19,7 @@ container.register({
     AppointmentRepository: asClass(AppointmentRepository, { lifetime: Lifetime.SINGLETON }),
     ProfessionalTimeSlotsRepository: asClass(ProfessionalTimesSlotsRepository, { lifetime: Lifetime.SINGLETON }),
     MedicalRecordRepository: asClass(MedicalRecordRepository, { lifetime: Lifetime.SINGLETON }),
-    DailyHourAvailabilityRepository: asClass(DailyHourAvailabilityRepository, { lifetime: Lifetime.SINGLETON })
+    DailyHourAvailabilityRepository: asClass(DailyHourAvailabilityRepository, { lifetime: Lifetime.SINGLETON }),
+    RoleRepository: asClass(RoleMongooseRepository, { lifetime: Lifetime.SINGLETON })
 });
 export default container;

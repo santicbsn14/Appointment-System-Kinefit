@@ -3,7 +3,8 @@ class UserMongooseRepository {
     async getAll(criteria) {
         try {
             let { limit = 30, page = 1 } = criteria;
-            const userDocuments = await userSchema.paginate({}, { limit, page });
+            const userDocuments = await userSchema.paginate({}, { limit, page,
+                populate: 'role' });
             if (!userDocuments.page)
                 userDocuments.page = 1;
             const mappedDocs = userDocuments.docs.map(user => ({
@@ -37,7 +38,7 @@ class UserMongooseRepository {
         }
     }
     async getUserById(id) {
-        const user = await userSchema.findById(id);
+        const user = await userSchema.findById(id).populate('role');
         if (user !== null) {
             return {
                 firstname: user.firstname,

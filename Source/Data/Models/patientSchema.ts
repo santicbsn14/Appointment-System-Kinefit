@@ -4,7 +4,7 @@ import paginate from 'mongoose-paginate-v2';
 
 export interface Patient {
     _id?: mongoose.Types.ObjectId;
-    user_id: mongoose.Types.ObjectId;
+    user_id: mongoose.Types.ObjectId | string;
     mutual?: string;
     clinical_data: unknown[];
 }

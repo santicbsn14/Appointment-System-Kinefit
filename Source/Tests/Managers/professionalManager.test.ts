@@ -49,11 +49,13 @@ describe('ProfessionalManager', () =>{
     describe('createProfessional', () => {
         it('should call professionalRepository.createProfessional with valid data', async () =>{
             let uid : IdMongo = new mongoose.Types.ObjectId('66c65b641bb4017c5a0f3d14')
+             let professional = {user_id: uid, specialties:['Terapia de manos', 'Terapia de choque']}
              // @ts-ignore entorno de testing
-            await professionalManager.createProfessional(uid)
+            await professionalManager.createProfessional(professional)
             expect(mockProfessionalRepository.createProfessional).toHaveBeenCalledWith({
                 ...uid, 
-                user_id: expect.any(mongoose.Types.ObjectId)
+                user_id: expect.any(mongoose.Types.ObjectId),
+                specialties:['Terapia de manos', 'Terapia de choque']
             })
         })
         it('should throw an error with invalid id', async () => {
@@ -65,7 +67,7 @@ describe('ProfessionalManager', () =>{
     describe('updateProfessional', () => {
         it('should call professionalRepository.updateProfessional with valid data', async () =>{
             let uid : IdMongo = new mongoose.Types.ObjectId()
-            let pid : Professional = {user_id: new mongoose.Types.ObjectId(), _id: uid}
+            let pid : Professional = {user_id: new mongoose.Types.ObjectId(), _id: uid, specialties:['Terapia de manos']}
             await professionalManager.updateProfessional(pid, uid)
             expect(mockProfessionalRepository.updateProfessional).toHaveBeenCalledWith(pid,uid)
         })
@@ -78,7 +80,7 @@ describe('ProfessionalManager', () =>{
     describe('updateProfessional', () => {
         it('should call professionalRepository.deleteProfessional with valid data', async () =>{
             let uid : IdMongo = new mongoose.Types.ObjectId()
-            let pid : Professional = {user_id: new mongoose.Types.ObjectId(), _id: uid}
+            let pid : Professional = {user_id: new mongoose.Types.ObjectId(), _id: uid, specialties:['Terapia de manos']}
             await professionalManager.deleteProfessional(pid.user_id)
             expect(mockProfessionalRepository.deleteProfessional).toHaveBeenCalledWith(pid.user_id)
         })

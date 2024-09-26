@@ -3,9 +3,10 @@ import { Appointment } from "../../Data/Models/appointmentSchema";
 import AppointmentManager from "../../Domain/Manager/appointmentManager";
 import { IdMongo, Criteria } from "typesMongoose";
 import { CreateAppointmentDto } from "typesRequestDtos";
+import { mailForConfirmAppointment } from "../../Services/mailing";
 
 
-export const createAppointmentByPatient = async (req: CustomRequest<CreateAppointmentDto>, res: Response, next: NextFunction) => {
+export const createAppointmentByPatient = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const manager = new AppointmentManager();
         
@@ -15,14 +16,14 @@ export const createAppointmentByPatient = async (req: CustomRequest<CreateAppoin
 
         const appointmentData: CreateAppointmentDto = req.body;
         const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
-        
+        if(createdAppointment) mailForConfirmAppointment('maritegu@gmail.com')
         res.status(201).json(createdAppointment);
     } catch (error) {
         next(error);
     }
 };
 
-export const createAppointmentByProfessional = async (req: CustomRequest<CreateAppointmentDto>, res: Response, next: NextFunction) => {
+export const createAppointmentByProfessional = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const manager = new AppointmentManager();
         
@@ -32,6 +33,22 @@ export const createAppointmentByProfessional = async (req: CustomRequest<CreateA
 
         const appointmentData: CreateAppointmentDto = req.body;
         const createdAppointment = await manager.createAppointmentByProfessional(appointmentData);
+        
+        res.status(201).json(createdAppointment);
+    } catch (error) {
+        next(error);
+    }
+};
+export const createBulkAppointments = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+        const manager = new AppointmentManager();
+        
+        if (!req.body) {
+            throw new Error('Request body is empty');
+        }
+
+        const appointmentData: CreateAppointmentDto[] = req.body;
+        const createdAppointment = await manager.createBulkAppointments(appointmentData);
         
         res.status(201).json(createdAppointment);
     } catch (error) {

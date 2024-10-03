@@ -20,6 +20,9 @@ class ProfessionalManager {
             throw new Error("User don't exist");
         if (verifyUser.role.name === "patient")
             throw new Error("Los pacientes no pueden ser profesionales");
+        let verifyProfessionalExist = await this.professionalRepository.getAll({ user_id: body.user_id });
+        if (verifyProfessionalExist.docs.length > 0)
+            throw new Error('El usuario ya tiene un perfil de profesional creado');
         return await this.professionalRepository.createProfessional(body);
     }
     async updateProfessional(body, id) {

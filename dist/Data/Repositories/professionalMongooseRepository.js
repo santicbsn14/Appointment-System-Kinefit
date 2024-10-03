@@ -1,9 +1,9 @@
 import professionalSchema from '../Models/professionalSchema.js';
 class ProfessionalRepository {
     async getAll(criteria) {
-        let { limit = 30, page = 1 } = criteria;
+        let { limit = 30, page = 1, ...filters } = criteria;
         //@ts-ignore se vera luego...
-        const professionalDocuments = await professionalSchema.paginate({}, {
+        const professionalDocuments = await professionalSchema.paginate(filters, {
             limit,
             page,
             populate: 'user_id'

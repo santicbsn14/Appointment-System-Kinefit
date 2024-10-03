@@ -26,9 +26,13 @@ class ProfessionalManager {
         
         let body : Professional =  {...bodyDto, user_id: bodyDto.user_id}
         await idValidation.parseAsync(body.user_id)
+
         let verifyUser :IUserPublic = await this.userRepository.getUserById(bodyDto.user_id)
         if(!verifyUser)  throw new Error("User don't exist")
         if(verifyUser.role.name === "patient") throw new Error("Los pacientes no pueden ser profesionales")
+
+        let verifyProfessionalExist = await this.professionalRepository.getAll({user_id: body.user_id})
+        if (verifyProfessionalExist.docs.length > 0) throw new Error('El usuario ya tiene un perfil de profesional creado');
         return await this.professionalRepository.createProfessional(body)
     }
     async updateProfessional(body:Professional, id:IdMongo){

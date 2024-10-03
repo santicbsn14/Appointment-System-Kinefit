@@ -28,6 +28,7 @@ export interface IUserPublic {
   phone: number;
   role: Role;
   status: boolean;
+  password?: string;
   id: mongoose.Types.ObjectId;
 }
 

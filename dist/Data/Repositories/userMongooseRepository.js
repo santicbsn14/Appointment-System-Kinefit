@@ -2,8 +2,8 @@ import userSchema from '../Models/userSchema.js';
 class UserMongooseRepository {
     async getAll(criteria) {
         try {
-            let { limit = 30, page = 1 } = criteria;
-            const userDocuments = await userSchema.paginate({}, { limit, page,
+            let { limit = 30, page = 1, ...filters } = criteria;
+            const userDocuments = await userSchema.paginate(filters, { limit, page,
                 populate: 'role' });
             if (!userDocuments.page)
                 userDocuments.page = 1;
@@ -71,7 +71,8 @@ class UserMongooseRepository {
             phone: user.phone,
             role: user.role,
             status: user.status,
-            id: user._id,
+            password: user.password,
+            id: user._id
         };
     }
     async createUser(body) {
@@ -89,7 +90,7 @@ class UserMongooseRepository {
             phone: user.phone,
             role: user.role,
             status: user.status,
-            id: user._id,
+            id: user._id
         };
     }
     async updateUser(userId, body) {

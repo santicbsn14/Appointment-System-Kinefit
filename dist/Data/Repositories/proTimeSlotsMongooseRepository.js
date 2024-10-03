@@ -1,9 +1,9 @@
 import professionalTimeSlotsSchema from '../Models/professionalTimeSlotsSchema.js';
 class ProfessionalTimeSlotsRepository {
     async getAll(criteria) {
-        let { limit = 30, page = 1 } = criteria;
+        let { limit = 30, page = 1, ...filters } = criteria;
         //@ts-ignore se vera luego...
-        const professionalTimeSlotssDocuments = await professionalTimeSlotsSchema.paginate({}, { limit, page });
+        const professionalTimeSlotssDocuments = await professionalTimeSlotsSchema.paginate(filters, { limit, page });
         if (!professionalTimeSlotssDocuments)
             throw new Error('ProfessionalTimeSlotss could not be accessed');
         if (!professionalTimeSlotssDocuments.page)
@@ -54,7 +54,7 @@ class ProfessionalTimeSlotsRepository {
     async getProfessionalTimeSlotsByPro(professional_id) {
         const ProfessionalTimeSlots = await professionalTimeSlotsSchema.findOne({ professional_id: professional_id });
         if (!ProfessionalTimeSlots)
-            throw new Error('ProfessionalTimeSlots could not found');
+            return null;
         return {
             _id: ProfessionalTimeSlots._id,
             professional_id: ProfessionalTimeSlots.professional_id,

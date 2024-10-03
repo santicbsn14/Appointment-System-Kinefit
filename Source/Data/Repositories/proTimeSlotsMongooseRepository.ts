@@ -13,9 +13,9 @@ interface IProfessionalTimeSlotsRepository{
 
 class ProfessionalTimeSlotsRepository implements IProfessionalTimeSlotsRepository{
     async getAll(criteria: Criteria):Promise<Paginated<ProfessionalTimeSlots>| null> {
-      let { limit = 30, page = 1 } = criteria;
+      let { limit = 30, page = 1, ...filters  } = criteria;
       //@ts-ignore se vera luego...
-      const professionalTimeSlotssDocuments:PaginateResult<ProfessionalTimeSlots> = await professionalTimeSlotsSchema.paginate({}, { limit, page });
+      const professionalTimeSlotssDocuments:PaginateResult<ProfessionalTimeSlots> = await professionalTimeSlotsSchema.paginate(filters, { limit, page });
   
       if(!professionalTimeSlotssDocuments) throw new Error('ProfessionalTimeSlotss could not be accessed')
       if(!professionalTimeSlotssDocuments.page) professionalTimeSlotssDocuments.page = 1
@@ -64,7 +64,7 @@ class ProfessionalTimeSlotsRepository implements IProfessionalTimeSlotsRepositor
     }
     async getProfessionalTimeSlotsByPro(professional_id: IdMongo):Promise<ProfessionalTimeSlots| null>{
       const ProfessionalTimeSlots  = await professionalTimeSlotsSchema.findOne({professional_id: professional_id})
-      if(!ProfessionalTimeSlots) throw new Error('ProfessionalTimeSlots could not found')
+      if(!ProfessionalTimeSlots) return null
       return {
         _id: ProfessionalTimeSlots._id,
         professional_id: ProfessionalTimeSlots.professional_id,

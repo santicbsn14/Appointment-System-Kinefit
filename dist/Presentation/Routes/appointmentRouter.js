@@ -6,7 +6,7 @@ const appointmentRouter = Router();
 appointmentRouter.get('/', getAll);
 appointmentRouter.get('/:id', getById);
 appointmentRouter.post('/bypatient', authMiddleware, authorization('CreateAppointments'), createAppointmentByPatient);
-appointmentRouter.post('/bulkAppointments', authMiddleware, authorization('CreateBulkAppointments'), createBulkAppointments);
+appointmentRouter.post('/bulkAppointments', createBulkAppointments);
 appointmentRouter.post('/byprofessional', authMiddleware, authorization('CreateAppointments'), createAppointmentByProfessional);
 appointmentRouter.put('/:id', authMiddleware, authorization('UpdateAppointments'), update);
 appointmentRouter.delete('/:id', deleteOne);

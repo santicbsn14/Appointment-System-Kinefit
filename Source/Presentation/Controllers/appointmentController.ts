@@ -16,7 +16,7 @@ export const createAppointmentByPatient = async (req: CustomRequest, res: Respon
 
         const appointmentData: CreateAppointmentDto = req.body;
         const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
-        if(createdAppointment) mailForConfirmAppointment('maritegu@gmail.com')
+        if(createdAppointment) mailForConfirmAppointment(createdAppointment.pacient_id.user_id.email)
         res.status(201).json(createdAppointment);
     } catch (error) {
         next(error);
@@ -32,9 +32,9 @@ export const createAppointmentByProfessional = async (req: CustomRequest, res: R
         }
 
         const appointmentData: CreateAppointmentDto = req.body;
-        const createdAppointment = await manager.createAppointmentByProfessional(appointmentData);
-        
-        res.status(201).json(createdAppointment);
+        const {getPatientEmail, appointmentCreated} = await manager.createAppointmentByProfessional(appointmentData);
+        if(appointmentCreated) mailForConfirmAppointment(getPatientEmail.user_id.email)
+        res.status(201).json(appointmentCreated);
     } catch (error) {
         next(error);
     }

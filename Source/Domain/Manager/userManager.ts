@@ -5,6 +5,7 @@ import emailValidation from "../Validations/emailValidation";
 import idValidation from "../Validations/idValidation";
 import createUserValidation from "../Validations/CreatesValidation/createUserValidation";
 import updateUserValidation from "../Validations/UserValidations/updateUserValidation";
+import { validPassword } from "Source/Utils/hashService";
 
 class UserManager {
     private userRepository
@@ -29,7 +30,14 @@ class UserManager {
     }
     async updateUser(body:IUser, id:IdMongo){
         await updateUserValidation.parseAsync({...body, id})
-        return await this.userRepository.updateUser(body, id)
+        let user: IUser = await this.userRepository.getUserByEmail(body.email)
+        const isHashedPassword = validPassword(body.password, user.password)
+        if (!isHashedPassword)
+            {
+                throw new Error('Updated failed, invalid password.');
+            }
+        
+        return await this.userRepository.updateUser(id, body)
     }
     async deleteUser(id: IdMongo){
         await idValidation.parseAsync(id)

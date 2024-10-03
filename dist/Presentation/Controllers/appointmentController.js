@@ -9,7 +9,7 @@ export const createAppointmentByPatient = async (req, res, next) => {
         const appointmentData = req.body;
         const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
         if (createdAppointment)
-            mailForConfirmAppointment('maritegu@gmail.com');
+            mailForConfirmAppointment(createdAppointment.pacient_id.user_id.email);
         res.status(201).json(createdAppointment);
     }
     catch (error) {
@@ -23,8 +23,10 @@ export const createAppointmentByProfessional = async (req, res, next) => {
             throw new Error('Request body is empty');
         }
         const appointmentData = req.body;
-        const createdAppointment = await manager.createAppointmentByProfessional(appointmentData);
-        res.status(201).json(createdAppointment);
+        const { getPatientEmail, appointmentCreated } = await manager.createAppointmentByProfessional(appointmentData);
+        if (appointmentCreated)
+            mailForConfirmAppointment(getPatientEmail.user_id.email);
+        res.status(201).json(appointmentCreated);
     }
     catch (error) {
         next(error);

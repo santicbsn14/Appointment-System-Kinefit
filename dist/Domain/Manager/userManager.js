@@ -3,6 +3,7 @@ import emailValidation from "../Validations/emailValidation.js";
 import idValidation from "../Validations/idValidation.js";
 import createUserValidation from "../Validations/CreatesValidation/createUserValidation.js";
 import updateUserValidation from "../Validations/UserValidations/updateUserValidation.js";
+import { validPassword } from "../../Utils/hashService.js";
 class UserManager {
     constructor() {
         this.userRepository = container.resolve('UserRepository');
@@ -24,7 +25,12 @@ class UserManager {
     }
     async updateUser(body, id) {
         await updateUserValidation.parseAsync({ ...body, id });
-        return await this.userRepository.updateUser(body, id);
+        let user = await this.userRepository.getUserByEmail(body.email);
+        const isHashedPassword = validPassword(body.password, user.password);
+        if (!isHashedPassword) {
+            throw new Error('Updated failed, invalid password.');
+        }
+        return await this.userRepository.updateUser(id, body);
     }
     async deleteUser(id) {
         await idValidation.parseAsync(id);

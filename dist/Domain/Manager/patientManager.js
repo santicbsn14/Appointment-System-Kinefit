@@ -1,7 +1,6 @@
 import container from "../../container.js";
 import idValidation from "../Validations/idValidation.js";
 import createPatientValidation from "../Validations/CreatesValidation/createPatientValidation.js";
-import dayjs from "dayjs";
 class PatientManager {
     constructor() {
         this.patientRepository = container.resolve('PatientRepository');
@@ -17,15 +16,15 @@ class PatientManager {
     }
     async createPatient(body) {
         await createPatientValidation.parseAsync(body);
-        let patient = await this.patientRepository.createPatient(body);
-        let verifyUser = this.userRepository.getUserById(body.user_id);
+        let verifyUser = await this.userRepository.getUserById(body.user_id);
         if (!verifyUser)
             throw new Error("User don't exist");
-        let medicalRecord = await this.medicalRecordRepository.createMedicalRecord({ patient_id: patient._id,
-            last_update: dayjs(new Date()),
-            notes: patient.clinical_data,
-            attachments: ''
-        });
+        if (verifyUser.role.name === "professional")
+            throw new Error("Los profesionales no pueden ser pacientes");
+        let verifyPatientExist = await this.patientRepository.getAll({ user_id: body.user_id });
+        if (verifyPatientExist.docs.length > 0)
+            throw new Error('El usuario ya tiene un perfil de paciente creado');
+        let patient = await this.patientRepository.createPatient(body);
         return patient;
     }
     async updatePatient(body, id) {

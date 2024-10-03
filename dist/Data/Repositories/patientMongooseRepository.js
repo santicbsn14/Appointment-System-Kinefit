@@ -1,9 +1,11 @@
 import patientSchema from '../Models/patientSchema.js';
 class PatientRepository {
     async getAll(criteria) {
-        let { limit = 30, page = 1 } = criteria;
+        let { limit = 30, page = 1, ...filters } = criteria;
         //@ts-ignore se vera luego...
-        const patientDocuments = await patientSchema.paginate({}, { limit, page });
+        const patientDocuments = await patientSchema.paginate(filters, { limit, page,
+            populate: 'user_id'
+        });
         if (!patientDocuments)
             throw new Error('Patients could not be accessed');
         if (!patientDocuments.page)
@@ -11,7 +13,7 @@ class PatientRepository {
         const mappedPatients = patientDocuments.docs.map((patient) => {
             return {
                 _id: patient._id,
-                user_id: patient._id,
+                user_id: patient.user_id,
                 mutual: patient.mutual ? patient.mutual : null,
                 clinical_data: patient.clinical_data
             };
@@ -41,7 +43,7 @@ class PatientRepository {
         };
     }
     async getPatientById(id) {
-        const patient = await patientSchema.findById(id);
+        const patient = await patientSchema.findById(id).populate('user_id');
         if (!patient)
             throw new Error('Patient could not found');
         return {

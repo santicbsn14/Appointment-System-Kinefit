@@ -3,7 +3,9 @@ class AppointmentRepository {
     async getAll(criteria) {
         let { limit = 30, page = 1, ...filters } = criteria; // Extrae los filtros
         //@ts-ignore se vera luego...
-        const appointmentDocuments = await appointmentSchema.paginate(filters, { limit, page });
+        const appointmentDocuments = await appointmentSchema.paginate(filters, { limit, page,
+            populate: ['pacient_id', 'professional_id']
+        });
         if (!appointmentDocuments)
             throw new Error('Appointments could not be accessed');
         if (!appointmentDocuments.page)
@@ -60,7 +62,7 @@ class AppointmentRepository {
             session_type: appointment.session_type
         };
     }
-    async updateAppointment(id, body) {
+    async updateAppointment(body, id) {
         const updatedAppointment = await appointmentSchema.findByIdAndUpdate(id, body, { new: true, runValidators: true });
         if (!updatedAppointment)
             throw new Error('A problem occurred when the Appointment was updated');

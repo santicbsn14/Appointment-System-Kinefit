@@ -20,9 +20,9 @@ class UserMongooseRepository implements userRepository {
 
   async getAll(criteria: Criteria): Promise<Paginated<IUserPublic>> {
     try {
-      let { limit = 30, page = 1 } = criteria;
+      let { limit = 30, page = 1, ...filters } = criteria;
       
-      const userDocuments: PaginateResult<IUser> = await userSchema.paginate({}, { limit, page,
+      const userDocuments: PaginateResult<IUser> = await userSchema.paginate(filters, { limit, page,
         populate:'role' });
       if(!userDocuments.page) userDocuments.page = 1
       const mappedDocs = userDocuments.docs.map(user => ({
@@ -76,7 +76,7 @@ class UserMongooseRepository implements userRepository {
     throw new Error('User not Found');
 
   }
-  async getUserByEmail(userEmail: IUser['email']): Promise<IUserPublic | null>{
+  async getUserByEmail(userEmail: IUser['email']): Promise<IUserPublic| null>{
     const user = await userSchema.findOne({email: userEmail})
     if(!user) throw new Error('User not Found');
     return{
@@ -90,7 +90,8 @@ class UserMongooseRepository implements userRepository {
       phone: user.phone ,
       role: user.role as unknown as Role,
       status: user.status ,
-      id: user._id  ,
+      password: user.password,
+      id: user._id  
     }
   }
   async createUser(body: IUser): Promise<IUserPublic|null>{
@@ -107,7 +108,7 @@ class UserMongooseRepository implements userRepository {
       phone: user.phone ,
       role: user.role as unknown as Role,
       status: user.status ,
-      id: user._id  ,
+      id: user._id  
     }
   }
   async updateUser(userId: IdMongo, body: Partial<IUser>):Promise<IUserPublic | null>{

@@ -34,6 +34,16 @@ export const getById = async (req, res, next) => {
         next(error);
     }
 };
+export const getByPro = async (req, res, next) => {
+    try {
+        const manager = new ProfessionalTimeSlotsManager();
+        let id = req.params.idp;
+        res.status(200).json(await manager.getProfessionalTimeSlotsByPro(id));
+    }
+    catch (error) {
+        next(error);
+    }
+};
 export const update = async (req, res, next) => {
     try {
         const manager = new ProfessionalTimeSlotsManager();

@@ -2,12 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import customLogger from '../../Services/logger';
 
 const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+  const similarErrorPattern = /ya tiene.*creado/;
   if (!(err instanceof Error)) {
     err = new Error('Unknown error');
   }
   if (err?.message.includes('Los pacientes no pueden ser profesionales')) {
     customLogger.warn(`409 Conflict - ${err.message}`, { stack: err.stack, route: req.path });
     return res.status(409).json({ message: err.message });
+  }
+  else if(similarErrorPattern.test(err?.message)){
+    customLogger.warn(`409 Conflict - ${err.message}`, { stack: err.stack, route: req.path });
+    return res.status(409).json({message: 'El recurso ya ha sido creado previamente' });
   }
   if (err?.message.includes('El paciente ya tiene un turno asignado para esta fecha.')) {
     customLogger.warn(`409 Conflict - ${err.message}`, { stack: err.stack, route: req.path });

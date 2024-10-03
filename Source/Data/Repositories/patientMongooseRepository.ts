@@ -12,9 +12,11 @@ interface IPatientRepository{
 
 class PatientRepository implements IPatientRepository{
   async getAll(criteria: Criteria):Promise<Paginated<Patient>| null> {
-    let { limit = 30, page = 1 } = criteria;
+    let { limit = 30, page = 1, ...filters } = criteria;
     //@ts-ignore se vera luego...
-    const patientDocuments:PaginateResult<Patient> = await patientSchema.paginate({}, { limit, page });
+    const patientDocuments:PaginateResult<Patient> = await patientSchema.paginate(filters, { limit, page,
+      populate:'user_id'
+     });
 
     if(!patientDocuments) throw new Error('Patients could not be accessed')
     if(!patientDocuments.page) patientDocuments.page = 1
@@ -22,7 +24,7 @@ class PatientRepository implements IPatientRepository{
     const mappedPatients = patientDocuments.docs.map((patient) => {
       return {
         _id: patient._id,
-        user_id: patient._id,
+        user_id: patient.user_id,
         mutual: patient.mutual ? patient.mutual : null,
         clinical_data: patient.clinical_data
       }
@@ -52,7 +54,7 @@ class PatientRepository implements IPatientRepository{
   }
   async getPatientById(id: IdMongo):Promise<Patient|null>{
 
-    const patient = await patientSchema.findById(id)
+    const patient = await patientSchema.findById(id).populate('user_id')
     if(!patient) throw new Error('Patient could not found')
     return{
       _id: patient._id,

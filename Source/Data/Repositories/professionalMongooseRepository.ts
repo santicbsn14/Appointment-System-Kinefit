@@ -12,9 +12,9 @@ interface IProfessionalRepository{
 
 class ProfessionalRepository implements IProfessionalRepository{
   async getAll(criteria: Criteria):Promise<Paginated<Professional>| null> {
-    let { limit = 30, page = 1 } = criteria;
+    let { limit = 30, page = 1 ,...filters } = criteria;
     //@ts-ignore se vera luego...
-    const professionalDocuments:PaginateResult<Professional> = await professionalSchema.paginate({}, { 
+    const professionalDocuments:PaginateResult<Professional> = await professionalSchema.paginate(filters, { 
       limit, 
       page, 
       populate: 'user_id' 

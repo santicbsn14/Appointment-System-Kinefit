@@ -10,12 +10,15 @@ import { isAvailable } from "../../Utils/scheduleUtils";
 import { DailyHourAvailability, HourlySlot } from "Source/Data/Models/dailyHourASchema";
 import dayjs, { Dayjs } from "dayjs";
 import 'dayjs/locale/es.js'
+import { get } from "http";
 
 class AppointmentManager {
     private appointmentRepository
     private professionalTimeSlotRepository
     private dailyHourAvailabilityRepository
+    private patientRepository 
     constructor(){
+        this.patientRepository = container.resolve('PatientRepository')
         this.appointmentRepository = container.resolve('AppointmentRepository');
         this.professionalTimeSlotRepository = container.resolve('ProfessionalTimeSlotsRepository')
         this.dailyHourAvailabilityRepository = container.resolve('DailyHourAvailabilityRepository')
@@ -66,7 +69,6 @@ class AppointmentManager {
         await createAppointmentValidation.parseAsync(body)
         let appointment = {...body, date_time:dayjs(bodyDto.date_time)}
         const appointmentDate = dayjs(appointment.date_time).startOf('day');
-
         
         const existingAppointments = await this.appointmentRepository.getAll({
             pacient_id: body.pacient_id,
@@ -76,13 +78,13 @@ class AppointmentManager {
             }
         });
         
-        
         if (existingAppointments && existingAppointments.docs.length > 0) {
             throw new Error('El paciente ya tiene un turno asignado para esta fecha.');
         }
         appointment.state='Confirmado'
-        return await this.appointmentRepository.createAppointment(appointment)
-
+        let getPatientEmail = await this.patientRepository.getPatientById(body.pacient_id)
+        let appointmentCreated = await this.appointmentRepository.createAppointment(appointment)
+        return {getPatientEmail, appointmentCreated}
     }
     async createBulkAppointments(bulkAppointmentsDto: CreateAppointmentDto[]): Promise<{success: Appointment[], failed: string[]}> {
         const createdAppointments: Appointment[] = [];

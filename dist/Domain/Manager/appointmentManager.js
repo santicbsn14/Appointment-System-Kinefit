@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import 'dayjs/locale/es.js';
 class AppointmentManager {
     constructor() {
+        this.patientRepository = container.resolve('PatientRepository');
         this.appointmentRepository = container.resolve('AppointmentRepository');
         this.professionalTimeSlotRepository = container.resolve('ProfessionalTimeSlotsRepository');
         this.dailyHourAvailabilityRepository = container.resolve('DailyHourAvailabilityRepository');
@@ -65,13 +66,16 @@ class AppointmentManager {
             throw new Error('El paciente ya tiene un turno asignado para esta fecha.');
         }
         appointment.state = 'Confirmado';
-        return await this.appointmentRepository.createAppointment(appointment);
+        let getPatientEmail = await this.patientRepository.getPatientById(body.pacient_id);
+        let appointmentCreated = await this.appointmentRepository.createAppointment(appointment);
+        return { getPatientEmail, appointmentCreated };
     }
     async createBulkAppointments(bulkAppointmentsDto) {
         const createdAppointments = [];
         const failedAppointments = [];
         for (const bodyDto of bulkAppointmentsDto) {
             try {
+
                 let body = {
                     ...bodyDto,
                     pacient_id: bodyDto.pacient_id,
@@ -80,8 +84,10 @@ class AppointmentManager {
                     schedule: {
                         week_day: bodyDto.schedule.week_day,
                         time_slots: {
-                            start_time: dayjs(bodyDto.schedule.time_slots.start_time),
-                            end_time: dayjs(bodyDto.schedule.time_slots.end_time)
+                            start_time: dayjs(bodyDto.date_time).set('hour', bodyDto.schedule.time_slots.start_time.split(':')[0])
+                            .set('minute', bodyDto.schedule.time_slots.start_time.split(':')[1]),
+                             end_time: dayjs(bodyDto.date_time).set('hour', bodyDto.schedule.time_slots.end_time.split(':')[0])
+                          .set('minute', bodyDto.schedule.time_slots.end_time.split(':')[1]) 
                         }
                     },
                     state: 'Solicitado'
@@ -89,6 +95,7 @@ class AppointmentManager {
                 const proTimeSlots = await this.professionalTimeSlotRepository.getProfessionalTimeSlotsByPro(body.professional_id);
                 if (!proTimeSlots)
                     throw new Error('Professional not found');
+
                 const isAvailableSlot = isAvailable(proTimeSlots.schedule, body.schedule);
                 if (!isAvailableSlot)
                     throw new Error('The professional does not work in that time slot');
@@ -100,6 +107,7 @@ class AppointmentManager {
                 createdAppointments.push(createdAppointment);
             }
             catch (error) {
+                console.log(error)
                 if (typeof error === 'object' && error !== null && 'message' in error)
                     failedAppointments.push(`Appointment for date ${bodyDto.date_time} failed: ${error.message instanceof Error}`);
             }

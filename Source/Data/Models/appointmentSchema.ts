@@ -14,7 +14,7 @@ export interface Appointment {
 }
 
 const appointmentSchema = new Schema<Appointment>({
-    pacient_id: {type: Schema.Types.ObjectId, ref:'pacients', required: true},
+    pacient_id: {type: Schema.Types.ObjectId, ref:'patients', required: true},
     professional_id: {type: Schema.Types.ObjectId, ref:'professionals', required: true},
     date_time: {type: Schema.Types.Date, required:true},
     schedule:{

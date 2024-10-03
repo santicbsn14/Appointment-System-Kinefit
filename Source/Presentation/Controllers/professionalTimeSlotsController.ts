@@ -50,6 +50,20 @@ export const getById =  async (req: CustomRequest, res: Response, next: NextFunc
         }
 }
 
+export const getByPro =  async (req: CustomRequest, res: Response, next: NextFunction)=>
+    {
+            try
+            {
+            const manager = new ProfessionalTimeSlotsManager()
+            let id : IdMongo = req.params.idp as unknown as IdMongo
+            res.status(200).json(await manager.getProfessionalTimeSlotsByPro(id))
+            }
+            catch(error)
+            {
+            next(error)
+            }
+    }
+
 export const update = async (req: CustomRequest, res: Response, next: NextFunction)=>
     {
         try

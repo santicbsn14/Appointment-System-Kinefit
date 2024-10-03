@@ -6,7 +6,7 @@ import createPatientValidation from "../Validations/CreatesValidation/createPati
 import { CreatePatientDto } from "typesRequestDtos";
 import { MedicalRecord } from "Source/Data/Models/medicalRecSchema";
 import dayjs from "dayjs";
-import { IUser } from "Source/Data/Models/userSchema";
+import { IUser, IUserPublic } from "Source/Data/Models/userSchema";
 
 
 class PatientManager {
@@ -27,15 +27,12 @@ class PatientManager {
     }
     async createPatient(body:CreatePatientDto){
         await createPatientValidation.parseAsync(body)
-        let patient  :Patient= await this.patientRepository.createPatient(body)
-        let verifyUser :IUser = this.userRepository.getUserById(body.user_id)
+        let verifyUser :IUserPublic = await this.userRepository.getUserById(body.user_id)
         if(!verifyUser)  throw new Error("User don't exist")
-        let medicalRecord: MedicalRecord = await this.medicalRecordRepository.createMedicalRecord({patient_id:patient._id,
-            last_update:dayjs(new Date()),
-            notes:patient.clinical_data,
-            attachments:''
-        })
-
+        if(verifyUser.role.name === "professional") throw new Error("Los profesionales no pueden ser pacientes")
+        let verifyPatientExist = await this.patientRepository.getAll({user_id: body.user_id})
+        if(verifyPatientExist.docs.length > 0) throw new Error('El usuario ya tiene un perfil de paciente creado')
+        let patient  :Patient= await this.patientRepository.createPatient(body)
         return patient
     }
     async updatePatient(body:Patient, id:IdMongo){

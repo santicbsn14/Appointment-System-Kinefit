@@ -1,6 +1,8 @@
-import mongoose, { Schema, Document, PaginateModel } from 'mongoose';
+import mongoose, { Schema, Document, PaginateModel, CallbackError } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { Role } from './roleSchema';
+import professionalSchema from './professionalSchema';
+import patientSchema from './patientSchema';
 
 export interface IUser  {
   firstname: string;
@@ -47,7 +49,23 @@ const userSchema = new Schema<IUser>({
 });
 
 userSchema.plugin(paginate);
+userSchema.pre('findOneAndDelete', async function (next) {
+  const user = this;  // `this` es la query
+  
+  try {
+    const doc = await user.model.findOne(this.getFilter());  // Obtener el documento que se está eliminando
 
+    if (doc) {
+      // Eliminar profesionales y pacientes asociados al user_id del usuario
+      await professionalSchema.deleteMany({ user_id: doc._id });
+      await patientSchema.deleteMany({ user_id: doc._id });
+    }
+
+    next();
+  } catch (error) {
+    next(error as unknown as CallbackError)
+  }
+});
 export interface UserModel extends PaginateModel<IUser> {}
 
 export default mongoose.model<IUser, UserModel>('users', userSchema);

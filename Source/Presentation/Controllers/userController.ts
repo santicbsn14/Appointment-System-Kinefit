@@ -64,12 +64,12 @@ export const getByEmail =  async (req: CustomRequest, res: Response, next: NextF
             try
             {
             const manager = new UserManager()
-            if (!req.body) {
-                throw new Error('Request body is empty');
+            if(!req.query){
+                throw new Error('No se obtuvo el email')
             }
-            let {email} = req.body
+            let {email} = req.query
  
-            res.status(200).json(await manager.getUserByEmail(email))
+            res.status(200).json(await manager.getUserByEmail(email as string))
             }
             catch(error)
             {

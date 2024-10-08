@@ -8,8 +8,8 @@ export const createAppointmentByPatient = async (req, res, next) => {
         }
         const appointmentData = req.body;
         const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
-        if (createdAppointment)
-            mailForConfirmAppointment(createdAppointment.pacient_id.user_id.email);
+        // if (createdAppointment)
+        //     mailForConfirmAppointment(createdAppointment.pacient_id.user_id.email);
         res.status(201).json(createdAppointment);
     }
     catch (error) {

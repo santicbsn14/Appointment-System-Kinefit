@@ -18,10 +18,10 @@ class ProfessionalTimeSlotsManager {
     }
     async createProfessionalTimeSlots(bodyDto) {
         let body = { ...bodyDto, professional_id: bodyDto.professional_id };
-        let verifyProfessional = this.professionalRepository.getProfessionalById(bodyDto.professional_id);
+        let verifyProfessional = await this.professionalRepository.getProfessionalById(bodyDto.professional_id);
         if (!verifyProfessional)
             throw new Error('Professional not found');
-        let verifyProTimeSlot = this.professionalTimeSlotsRepository.getProfessionalTimeSlotsByPro(bodyDto.professional_id);
+        let verifyProTimeSlot = await this.professionalTimeSlotsRepository.getProfessionalTimeSlotsByPro(bodyDto.professional_id);
         if (verifyProTimeSlot)
             throw new Error('El profesional ya tiene un horario creado');
         return await this.professionalTimeSlotsRepository.createProfessionalTimeSlots(body);

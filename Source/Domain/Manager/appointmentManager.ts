@@ -52,7 +52,19 @@ class AppointmentManager {
 
         const isSlotAvailable = await this.isHourlySlotAvailable(body.date_time, body.schedule.time_slots.start_time, body.professional_id);
         if (!isSlotAvailable) throw new Error('No available slots for the selected time');
+        const appointmentDate = dayjs(body.date_time).startOf('day');
         
+        const existingAppointments = await this.appointmentRepository.getAll({
+            pacient_id: body.pacient_id,
+            date_time: {
+                $gte: appointmentDate.toDate(),  
+                $lt: appointmentDate.add(1, 'day').toDate()  
+            }
+        });
+        
+        if (existingAppointments && existingAppointments.docs.length > 0) {
+            throw new Error('El paciente ya tiene un turno asignado para esta fecha.');
+        }
         body.state = 'Confirmado';
         body.date_time= dayjs(bodyDto.date_time)
         return await this.appointmentRepository.createAppointment(body);
@@ -123,6 +135,7 @@ class AppointmentManager {
             } catch (error) {
                 if (typeof error === 'object' && error !== null && 'message' in error)
                 failedAppointments.push(`Appointment for date ${bodyDto.date_time} failed: ${error.message instanceof Error}`);
+               throw new Error(error as unknown as string)
             }
         }
     

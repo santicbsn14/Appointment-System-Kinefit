@@ -57,7 +57,7 @@ class UserMongooseRepository {
         throw new Error('User not Found');
     }
     async getUserByEmail(userEmail) {
-        const user = await userSchema.findOne({ email: userEmail });
+        const user = await userSchema.findOne({ email: userEmail }).populate('role');
         if (!user)
             throw new Error('User not Found');
         return {

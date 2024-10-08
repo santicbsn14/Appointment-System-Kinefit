@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs';
 import mongoose,{Schema} from 'mongoose';
-
+import utc from 'dayjs/plugin/utc'; 
 export interface HourlySlot {
     hour: number; // 0-23
     max_sessions: number;

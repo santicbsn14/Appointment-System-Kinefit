@@ -43,10 +43,9 @@ export const getById = async (req, res, next) => {
 export const getByEmail = async (req, res, next) => {
     try {
         const manager = new UserManager();
-        if (!req.body) {
-            throw new Error('Request body is empty');
-        }
-        let { email } = req.body;
+        
+
+        let { email } = req.query;
         res.status(200).json(await manager.getUserByEmail(email));
     }
     catch (error) {

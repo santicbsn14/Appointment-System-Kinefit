@@ -2,6 +2,8 @@ import dailyHourAvailabilitySchema, { DailyHourAvailability } from "../Models/da
 import mongoose, { PaginateResult } from 'mongoose';
 import { Paginated, Criteria, IdMongo } from '../../Utils/Types/typesMongoose';
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc.js'; 
+dayjs.extend(utc);
 
 interface IDailyHourAvailabilityRepository{
     getAll: (criteria :Criteria)=> Promise<Paginated<DailyHourAvailability>| null>,
@@ -64,8 +66,8 @@ class DailyHourAvailabilityRepository implements IDailyHourAvailabilityRepositor
         }
     }
     async getDailyHourAvailabilityByDate(date: dayjs.Dayjs, professional_id?: IdMongo):Promise<DailyHourAvailability|null|string>{
-      let dateOfDay = date.startOf('day')
-      let dailyHourAvailability = await dailyHourAvailabilitySchema.findOne({date: dateOfDay})
+      
+      let dailyHourAvailability = await dailyHourAvailabilitySchema.findOne({date: date})
       
       if(!dailyHourAvailability) {
           if (!professional_id) {
@@ -74,7 +76,7 @@ class DailyHourAvailabilityRepository implements IDailyHourAvailabilityRepositor
              dailyHourAvailability = await dailyHourAvailabilitySchema.create({
              professional_id: professional_id,
              date:dayjs(date),
-             hourly_slots:[{hour: date.toDate().getUTCHours(),
+             hourly_slots:[{hour: date.utc().hour(),
                max_sessions:6,
                current_sessions:1
              }]

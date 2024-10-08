@@ -13,8 +13,11 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
   else if(similarErrorPattern.test(err?.message)){
     customLogger.warn(`409 Conflict - ${err.message}`, { stack: err.stack, route: req.path });
     return res.status(409).json({message: 'El recurso ya ha sido creado previamente' });
+  } else if(err?.message.includes('The professional does not work in that time slot')){
+    customLogger.warn(`409 Conflict - ${err.message}`, { stack: err.stack, route: req.path });
+    return res.status(409).json({ message: err.message });
   }
-  if (err?.message.includes('El paciente ya tiene un turno asignado para esta fecha.')) {
+  else if (err?.message.includes('El paciente ya tiene un turno asignado para esta fecha.')) {
     customLogger.warn(`409 Conflict - ${err.message}`, { stack: err.stack, route: req.path });
     return res.status(409).json({ message: err.message });
   }

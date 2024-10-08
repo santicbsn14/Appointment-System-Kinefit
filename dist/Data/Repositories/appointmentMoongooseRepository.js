@@ -35,7 +35,7 @@ class AppointmentRepository {
         };
     }
     async createAppointment(body) {
-        const newAppointment = await appointmentSchema.create(body);
+        const newAppointment = await appointmentSchema.create(body)
         if (!newAppointment)
             throw new Error('A problem occurred when the Appointment was created');
         return {

@@ -77,7 +77,7 @@ class UserMongooseRepository implements userRepository {
 
   }
   async getUserByEmail(userEmail: IUser['email']): Promise<IUserPublic| null>{
-    const user = await userSchema.findOne({email: userEmail})
+    const user = await userSchema.findOne({email: userEmail}).populate('role')
     if(!user) throw new Error('User not Found');
     return{
       firstname:user.firstname ,

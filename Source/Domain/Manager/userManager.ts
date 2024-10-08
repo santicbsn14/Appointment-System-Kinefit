@@ -1,11 +1,12 @@
 import container from "../../container";
-import { IUser } from "../../Data/Models/userSchema";
+import { IUser, IUserPublic } from "../../Data/Models/userSchema";
 import { Criteria, IdMongo, Paginated } from "../../Utils/Types/typesMongoose";
 import emailValidation from "../Validations/emailValidation";
 import idValidation from "../Validations/idValidation";
 import createUserValidation from "../Validations/CreatesValidation/createUserValidation";
 import updateUserValidation from "../Validations/UserValidations/updateUserValidation";
-import { validPassword } from "Source/Utils/hashService";
+import { validPassword } from "../../Utils/hashService";
+import admin from "firebase-admin";
 
 class UserManager {
     private userRepository
@@ -41,6 +42,11 @@ class UserManager {
     }
     async deleteUser(id: IdMongo){
         await idValidation.parseAsync(id)
+        let userToDelete: IUserPublic = await this.userRepository.getUserById(id)
+        const userRecord = await admin.auth().getUserByEmail(userToDelete.email);
+        const uid = userRecord.uid;
+        
+        await admin.auth().deleteUser(uid); 
         return await this.userRepository.deleteUser(id)
     }
 }

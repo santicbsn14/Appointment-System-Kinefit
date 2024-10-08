@@ -4,6 +4,7 @@ import idValidation from "../Validations/idValidation.js";
 import createUserValidation from "../Validations/CreatesValidation/createUserValidation.js";
 import updateUserValidation from "../Validations/UserValidations/updateUserValidation.js";
 import { validPassword } from "../../Utils/hashService.js";
+import admin from "firebase-admin";
 class UserManager {
     constructor() {
         this.userRepository = container.resolve('UserRepository');
@@ -34,6 +35,10 @@ class UserManager {
     }
     async deleteUser(id) {
         await idValidation.parseAsync(id);
+        let userToDelete = await this.userRepository.getUserById(id);
+        const userRecord = await admin.auth().getUserByEmail(userToDelete.email);
+        const uid = userRecord.uid;
+        await admin.auth().deleteUser(uid);
         return await this.userRepository.deleteUser(id);
     }
 }

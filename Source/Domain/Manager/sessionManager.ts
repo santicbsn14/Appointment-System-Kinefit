@@ -7,6 +7,7 @@ import idValidation from "../Validations/idValidation";
 import createUserValidation from "../Validations/CreatesValidation/createUserValidation";
 import updateUserValidation from "../Validations/UserValidations/updateUserValidation";
 import { CreateUserDto, userLogin } from "typesRequestDtos";
+import { createHash } from "../../Utils/hashService";
 
 class UserManager {
     private userRepository
@@ -19,18 +20,25 @@ class UserManager {
         return await this.userRepository.getUserByEmail(email)
     }
     async signup(bodyUser: CreateUserDto){
-        let user :IUser = await this.userRepository.createUser(bodyUser)
-        if(user){
-        const {auth} = pkg
-        let userResponse = await auth().createUser({
-            email: bodyUser.email,
-            password: bodyUser.password,
-            emailVerified: false,
-            disabled: false
-        });
+        let {password, ...bodyUserDto} = bodyUser
+        const hashedPassword = await createHash(password)
+        let userWithPassword = {...bodyUserDto,
+            password:hashedPassword
+        }
+        let user: IUser = await this.userRepository.createUser(userWithPassword);
         
-        return user
-    } 
+        if (user) {
+            const { auth } = pkg;
+            let userResponse = await auth().createUser({
+                email: bodyUser.email,
+                password: password,
+                emailVerified: false,
+                disabled: false
+            });
+            
+            
+            return user;
+        }
     }
     async login(logindto: userLogin){
         let {auth} = pkg

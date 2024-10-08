@@ -2,8 +2,8 @@ import { DaySchedule } from 'Source/Data/Models/professionalTimeSlotsSchema';
 import dayjs, { Dayjs } from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter.js';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore.js';
-import utc from 'dayjs/plugin/utc.js'; // Para manejar las fechas en UTC
-import timezone from 'dayjs/plugin/timezone.js'; // Para manejar zonas horarias
+import utc from 'dayjs/plugin/utc.js'; 
+import timezone from 'dayjs/plugin/timezone.js';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);

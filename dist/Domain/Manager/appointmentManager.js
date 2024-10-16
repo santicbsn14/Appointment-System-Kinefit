@@ -56,11 +56,12 @@ class AppointmentManager {
     }
     async createAppointmentByProfessional(bodyDto) {
         const body = {
-            pacient_id: new mongoose.Types.ObjectId(bodyDto.pacient_id),
-            professional_id: new mongoose.Types.ObjectId(bodyDto.professional_id),
+            pacient_id: bodyDto.pacient_id,
+            professional_id: bodyDto.professional_id,
             date_time: new Date(bodyDto.date_time),
             schedule: bodyDto.schedule,
             state: bodyDto.state,
+            order_photo: bodyDto.order_photo,
             session_type: bodyDto.session_type,
         };
         await createAppointmentValidation.parseAsync(body);
@@ -135,12 +136,8 @@ class AppointmentManager {
                     current_sessions: slot.current_sessions + 1,
                 };
                 hourlySlots.hourly_slots = updatedHourlySlots;
-                try {
-                    await this.dailyHourAvailabilityRepository.updateDailyHourAvailability(hourlySlots._id, hourlySlots);
-                    return true;
-                } catch (error) {
-                    throw new Error('Aca hay error:', error)
-                }
+                await this.dailyHourAvailabilityRepository.updateDailyHourAvailability(hourlySlots._id, hourlySlots);
+                return true;
             }
         }
         else {
@@ -160,7 +157,11 @@ class AppointmentManager {
     }
     async deleteAppointment(id) {
         await idValidation.parseAsync(id);
-        return await this.appointmentRepository.deleteAppointment(id);
+        let appointment = await this.appointmentRepository.getAppointmentById(id);
+        console.log(appointment);
+        let email = appointment.pacient_id.user_id.email;
+        let appointmentToDelete = await this.appointmentRepository.deleteAppointment(id);
+        return { appointmentToDelete, email };
     }
 }
 export default AppointmentManager;

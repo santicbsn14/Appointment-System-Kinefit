@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { createProfessional, deleteOne, getAll, getById, update } from "../Controllers/professionalController.js";
+import authorization from "../Middlewares/authorization.js";
+import authMiddleware from "../Middlewares/auth.js";
 const professionalRouter = Router();
 professionalRouter.get('/', getAll);
-professionalRouter.get('/:id', getById);
-professionalRouter.post('/', createProfessional);
-professionalRouter.put('/:id', update);
-professionalRouter.delete('/:id', deleteOne);
+professionalRouter.get('/:id', authMiddleware, authorization('GetUserById'), getById);
+professionalRouter.post('/', authMiddleware, authorization('CreateProfessional'), createProfessional);
+professionalRouter.put('/:id', authMiddleware, authorization('UpdateUser'), update);
+professionalRouter.delete('/:id', authMiddleware, authorization('DeleteUser'), deleteOne);
 export default professionalRouter;

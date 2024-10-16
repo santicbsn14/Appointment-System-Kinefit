@@ -43,8 +43,9 @@ export const getById = async (req, res, next) => {
 export const getByEmail = async (req, res, next) => {
     try {
         const manager = new UserManager();
-        
-
+        if (!req.query) {
+            throw new Error('No se obtuvo el email');
+        }
         let { email } = req.query;
         res.status(200).json(await manager.getUserByEmail(email));
     }

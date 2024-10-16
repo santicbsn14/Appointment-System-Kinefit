@@ -2,18 +2,18 @@ import { NextFunction, Response } from "express";
 import { Patient } from "../../Data/Models/patientSchema";
 import PatientManager from "../../Domain/Manager/patientManager";
 import { IdMongo, Criteria } from "typesMongoose";
-import { CreatePatientDto } from "typesRequestDtos";
+import { AuthenticatedRequest, CreatePatientDto } from "typesRequestDtos";
 
 
 
-export const createPatient = async (req: CustomRequest<CreatePatientDto>, res: Response, next: NextFunction) => {
+export const createPatient = async (req:CustomRequest, res: Response, next: NextFunction) => {
     try {
         const manager = new PatientManager();
         
         if (!req.body) {
             throw new Error('Request body is empty');
         }
-        const body: CreatePatientDto = req.body
+        const body: CreatePatientDto = req.body as unknown as CreatePatientDto
         const createdPatient = await manager.createPatient(body);
         
         res.status(201).json(createdPatient);

@@ -1,5 +1,5 @@
 import AppointmentManager from "../../Domain/Manager/appointmentManager.js";
-import { mailForConfirmAppointment } from "../../Services/mailing.js";
+import { mailForConfirmAppointment, mailForDeleteAppointment } from "../../Services/mailing.js";
 export const createAppointmentByPatient = async (req, res, next) => {
     try {
         const manager = new AppointmentManager();
@@ -8,8 +8,9 @@ export const createAppointmentByPatient = async (req, res, next) => {
         }
         const appointmentData = req.body;
         const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
-        // if (createdAppointment)
-        //     mailForConfirmAppointment(createdAppointment.pacient_id.user_id.email);
+        //@ts-expect-error 
+        if (createdAppointment)
+            await mailForConfirmAppointment(req.user.email);
         res.status(201).json(createdAppointment);
     }
     catch (error) {
@@ -82,7 +83,10 @@ export const deleteOne = async (req, res, next) => {
     try {
         const manager = new AppointmentManager();
         let id = req.params.id;
-        res.status(201).json(await manager.deleteAppointment(id));
+        let { appointmentToDelete, email } = await manager.deleteAppointment(id);
+        if (appointmentToDelete)
+            mailForDeleteAppointment(email);
+        res.status(201).json(appointmentToDelete);
     }
     catch (error) {
         next(error);

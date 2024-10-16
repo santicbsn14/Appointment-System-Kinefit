@@ -10,7 +10,8 @@ export interface Appointment {
     date_time: Dayjs,
     schedule: DaySchedule,
     state: appointmentState,
-    session_type: string
+    session_type: string,
+    order_photo?: string
 }
 
 const appointmentSchema = new Schema<Appointment>({
@@ -25,6 +26,7 @@ const appointmentSchema = new Schema<Appointment>({
         }
     },
     state: {type: Schema.Types.String, required: true, default:'Solicitado'},
+    order_photo:{type: Schema.Types.String},
     session_type:{type: Schema.Types.String, required: true}
 })
 

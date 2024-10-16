@@ -3,7 +3,7 @@ import { Appointment } from "../../Data/Models/appointmentSchema";
 import AppointmentManager from "../../Domain/Manager/appointmentManager";
 import { IdMongo, Criteria } from "typesMongoose";
 import { CreateAppointmentDto } from "typesRequestDtos";
-import { mailForConfirmAppointment } from "../../Services/mailing";
+import { mailForConfirmAppointment, mailForDeleteAppointment } from "../../Services/mailing";
 
 
 export const createAppointmentByPatient = async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -16,7 +16,8 @@ export const createAppointmentByPatient = async (req: CustomRequest, res: Respon
 
         const appointmentData: CreateAppointmentDto = req.body;
         const createdAppointment = await manager.createAppointmentByPatient(appointmentData);
-        if(createdAppointment) mailForConfirmAppointment(createdAppointment.pacient_id.user_id.email)
+        //@ts-expect-error 
+        if(createdAppointment) await mailForConfirmAppointment(req.user.email);
         res.status(201).json(createdAppointment);
     } catch (error) {
         next(error);
@@ -106,7 +107,9 @@ export const deleteOne = async (req: CustomRequest, res: Response, next: NextFun
         {
         const manager = new AppointmentManager()
         let id : IdMongo = req.params.id as unknown as IdMongo;
-        res.status(201).json(await manager.deleteAppointment(id))
+        let {appointmentToDelete, email}  = await manager.deleteAppointment(id)
+        if(appointmentToDelete) mailForDeleteAppointment(email)
+        res.status(201).json(appointmentToDelete);
         }
         catch(error)
         {

@@ -6,7 +6,7 @@ import { CreateProfessionalDto } from "typesRequestDtos";
 
 
 
-export const createProfessional = async (req: CustomRequest<CreateProfessionalDto>, res: Response, next: NextFunction) => {
+export const createProfessional = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const manager = new ProfessionalManager();
         

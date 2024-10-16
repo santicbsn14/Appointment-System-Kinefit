@@ -53,11 +53,12 @@
     "jsdom": "^25.0.0",
     "mongodb-memory-server": "^10.0.0",
     "nodemon": "^3.1.4",
+    "supertest": "^7.0.0",
     "ts-migrate": "^0.1.35",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4",
     "typescript-eslint": "^7.17.0",
-    "vitest": "^1.4.0"
+    "vitest": "^1.6.0"
   }
 }

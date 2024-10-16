@@ -14,7 +14,6 @@ export function isAvailable(professionalSchedule, patientRequest) {
     return requests.every((requestedDay) => {
         // Buscamos si el profesional trabaja en el día solicitado
         const matchingDay = professionalSchedule.find((profDay) => profDay.week_day === requestedDay.week_day);
-        
         if (!matchingDay)
             return false;
         // Obtenemos los slots de tiempo tanto del profesional como del paciente
@@ -24,7 +23,6 @@ export function isAvailable(professionalSchedule, patientRequest) {
         const profEndLocal = dayjs(profSlot.end_time).tz(systemTimezone);
         const reqSlotStart = dayjs(reqSlot.start_time).tz(systemTimezone);
         const reqSlotEnd = dayjs(reqSlot.end_time).tz(systemTimezone);
-        
         const isStartTimeValid = reqSlotStart.hour() > profStartLocal.hour() ||
             (reqSlotStart.hour() === profStartLocal.hour() && reqSlotStart.minute() >= profStartLocal.minute());
         const isEndTimeValid = reqSlotEnd.hour() < profEndLocal.hour() ||

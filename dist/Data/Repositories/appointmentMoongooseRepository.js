@@ -4,7 +4,14 @@ class AppointmentRepository {
         let { limit = 30, page = 1, ...filters } = criteria; // Extrae los filtros
         //@ts-ignore se vera luego...
         const appointmentDocuments = await appointmentSchema.paginate(filters, { limit, page,
-            populate: ['pacient_id', 'professional_id']
+            populate: [{ path: 'pacient_id' },
+                {
+                    path: 'professional_id',
+                    populate: {
+                        path: 'user_id', // Asegúrate de que este campo es el correcto
+                        model: 'users' // El nombre del modelo que deseas poblar
+                    }
+                }]
         });
         if (!appointmentDocuments)
             throw new Error('Appointments could not be accessed');
@@ -18,6 +25,7 @@ class AppointmentRepository {
                 date_time: appointment.date_time,
                 schedule: appointment.schedule,
                 state: appointment.state,
+                order_photo: appointment.order_photo,
                 session_type: appointment.session_type
             };
         });
@@ -35,7 +43,7 @@ class AppointmentRepository {
         };
     }
     async createAppointment(body) {
-        const newAppointment = await appointmentSchema.create(body)
+        const newAppointment = await appointmentSchema.create(body);
         if (!newAppointment)
             throw new Error('A problem occurred when the Appointment was created');
         return {
@@ -45,6 +53,7 @@ class AppointmentRepository {
             date_time: newAppointment.date_time,
             schedule: newAppointment.schedule,
             state: newAppointment.state,
+            order_photo: newAppointment.order_photo,
             session_type: newAppointment.session_type
         };
     }
@@ -59,6 +68,7 @@ class AppointmentRepository {
             date_time: appointment.date_time,
             schedule: appointment.schedule,
             state: appointment.state,
+            order_photo: appointment.order_photo,
             session_type: appointment.session_type
         };
     }
@@ -73,6 +83,7 @@ class AppointmentRepository {
             date_time: updatedAppointment.date_time,
             schedule: updatedAppointment.schedule,
             state: updatedAppointment.state,
+            order_photo: updatedAppointment.order_photo,
             session_type: updatedAppointment.session_type
         };
     }

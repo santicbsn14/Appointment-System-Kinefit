@@ -24,6 +24,7 @@ const mockAppointmentRepository = {
           }
         },
         session_type: 'Type1',
+        order_photo:'url://httpjjs.com',
         state: 'Confirmado'
       }),
     updateAppointment: vi.fn(),
@@ -95,6 +96,7 @@ const mockAppointmentRepository = {
             end_time: dayjs(new Date("2024-08-30T10:00:00Z"))
           }
         },
+        order_photo:'url://httpjjs.com',
         session_type: 'Type1',
         state: 'Solicitado'
       };
@@ -214,6 +216,7 @@ const mockAppointmentRepository = {
                     end_time: dayjs(new Date("2024-08-30T10:00:00Z"))
                   }
                 },
+                order_photo:'url://httpjjs.com',
                 session_type: 'Type1',
                 state: 'Solicitado' as appointmentState
               };

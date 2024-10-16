@@ -12,6 +12,7 @@ const appointmentSchema = new Schema({
         }
     },
     state: { type: Schema.Types.String, required: true, default: 'Solicitado' },
+    order_photo: { type: Schema.Types.String },
     session_type: { type: Schema.Types.String, required: true }
 });
 appointmentSchema.plugin(paginate);

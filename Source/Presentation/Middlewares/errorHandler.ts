@@ -20,6 +20,9 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
   else if (err?.message.includes('El paciente ya tiene un turno asignado para esta fecha.')) {
     customLogger.warn(`409 Conflict - ${err.message}`, { stack: err.stack, route: req.path });
     return res.status(409).json({ message: err.message });
+  } else if (err?.message.includes('No se han configurado los horarios de este profesional')) {
+    customLogger.warn(`404 not found - ${err.message}`, { stack: err.stack, route: req.path });
+    return res.status(404).json({ message: err.message });
   }
   else if (err?.message.includes('not found')) {
     customLogger.warn(`404 Error - ${err.message}`, { stack: err.stack, route: req.path });

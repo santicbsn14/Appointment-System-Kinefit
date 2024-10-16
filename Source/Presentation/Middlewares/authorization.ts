@@ -6,7 +6,6 @@ const authorization = (permission: string) =>
     {
         //@ts-ignore
         const user = req.user;
-        
         if (!user.role?.permissions?.includes(permission))
         {
             return res.status(401).send({ message: 'Not authorization!' });

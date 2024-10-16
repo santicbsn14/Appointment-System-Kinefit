@@ -5,7 +5,7 @@ import { IdMongo, Criteria } from "typesMongoose";
 import { CreateProfessionalTimeSlotsDto } from "typesRequestDtos";
 
 
-export const createProfessionalTimeSlots = async (req: CustomRequest<CreateProfessionalTimeSlotsDto>, res: Response, next: NextFunction) => {
+export const createProfessionalTimeSlots = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const manager = new ProfessionalTimeSlotsManager();
         

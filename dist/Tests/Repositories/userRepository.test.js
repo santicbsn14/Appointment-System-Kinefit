@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import UserMongooseRepository from 'Source/Data/Repositories/userMongooseRepository';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import roleSchema from 'Source/Data/Models/roleSchema';
 describe('UserMongooseRepository', () => {
     let repository;
     let testUserId;
@@ -12,6 +13,10 @@ describe('UserMongooseRepository', () => {
         //@ts-ignore
         await mongoose.connect(uri);
         repository = new UserMongooseRepository();
+        const role = await roleSchema.create({
+            name: 'admin',
+            permissions: [`Create all`]
+        });
     });
     afterAll(async () => {
         await mongoose.disconnect();

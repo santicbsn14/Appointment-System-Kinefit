@@ -25,7 +25,9 @@ class ProfessionalTimeSlotsManager {
     }
     async getProfessionalTimeSlotsByPro(id: IdMongo){
         await idValidation.parseAsync(id)
-        return await this.professionalTimeSlotsRepository.getProfessionalTimeSlotsByPro(id)
+        let proTimeSlots = await this.professionalTimeSlotsRepository.getProfessionalTimeSlotsByPro(id)
+        if(!proTimeSlots) throw new Error('No se han configurado los horarios de este profesional')
+        return proTimeSlots
     }
     async createProfessionalTimeSlots(bodyDto:CreateProfessionalTimeSlotsDto){
         let body   = {...bodyDto, professional_id: bodyDto.professional_id}

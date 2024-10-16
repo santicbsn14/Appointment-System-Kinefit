@@ -2,16 +2,32 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import PatientMongooseRepository from 'Source/Data/Repositories/patientMongooseRepository';
+import userSchema from 'Source/Data/Models/userSchema';
 describe('PatientMongooseRepository', () => {
     let repository;
     let testPatientId;
     let mongoServer;
+    let userId;
     beforeAll(async () => {
         mongoServer = await MongoMemoryServer.create();
         const uri = mongoServer.getUri();
         //@ts-ignore
         await mongoose.connect(uri);
         repository = new PatientMongooseRepository();
+        const user = await userSchema.create({
+            firstname: 'John',
+            lastname: 'Doe',
+            username: 'johndoe',
+            email: 'john@example.com',
+            age: 30,
+            dni: 12345678,
+            homeAdress: '123 Main St',
+            phone: 1234567890,
+            role: new mongoose.Types.ObjectId(),
+            status: true,
+            password: 'password123'
+        });
+        userId = user._id; // Guarda el ID del usuario creado
     });
     afterAll(async () => {
         await mongoose.disconnect();

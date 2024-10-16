@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import UserMongooseRepository from 'Source/Data/Repositories/userMongooseRepository';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { IUser } from 'Source/Data/Models/userSchema';
+import roleSchema from 'Source/Data/Models/roleSchema';
 
 describe('UserMongooseRepository', () => {
     let repository: UserMongooseRepository;
@@ -15,6 +16,10 @@ describe('UserMongooseRepository', () => {
       //@ts-ignore
       await mongoose.connect(uri);
       repository = new UserMongooseRepository();
+      const role = await roleSchema.create({
+        name:'admin',
+        permissions:[`Create all`]
+      })
     });
   
     afterAll(async () => {

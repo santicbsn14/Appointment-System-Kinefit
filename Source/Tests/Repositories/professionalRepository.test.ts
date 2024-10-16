@@ -3,18 +3,33 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import ProfessionalMongooseRepository from 'Source/Data/Repositories/professionalMongooseRepository';
 import { Professional } from 'Source/Data/Models/professionalSchema';
+import userSchema from 'Source/Data/Models/userSchema';
 
 describe('ProfessionalMongooseRepository', () => {
     let repository: ProfessionalMongooseRepository;
     let testProfessionalId: mongoose.Types.ObjectId;
     let mongoServer: MongoMemoryServer;
-
+    let userId: mongoose.Types.ObjectId;
     beforeAll(async () => {
       mongoServer = await MongoMemoryServer.create();
       const uri = mongoServer.getUri();
       //@ts-ignore
       await mongoose.connect(uri);
       repository = new ProfessionalMongooseRepository();
+      const user = await userSchema.create({
+        firstname: 'John',
+        lastname: 'Doe',
+        username: 'johndoe',
+        email: 'john@example.com',
+        age: 30,
+        dni: 12345678,
+        homeAdress: '123 Main St',
+        phone: 1234567890,
+        role: new mongoose.Types.ObjectId(),
+        status: true,
+        password: 'password123'
+      });
+      userId = user._id; 
     });
   
     afterAll(async () => {
@@ -50,11 +65,12 @@ describe('ProfessionalMongooseRepository', () => {
     });
   
     it('should update a professional', async () => {
-      const updateData = { user_id: new mongoose.Types.ObjectId('66c65b641bb4017c5a0f3d13') };
+      const updateData = { specialties: ['terapia de manos', 'Rehabilitacion de rodilla'] };
       // @ts-ignore entorno de testing
       const updatedProfessional = await repository.updateProfessional(testProfessionalId, updateData);
+      console.log(updatedProfessional)
       expect(updatedProfessional).toBeDefined();
-      expect(updatedProfessional?.user_id).toEqual(updateData.user_id);
+      expect(updatedProfessional?.specialties).toEqual(updateData.specialties);
     });
   
     it('should delete a professional', async () => {

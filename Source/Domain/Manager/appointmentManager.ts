@@ -3,14 +3,14 @@ import { appointmentState, type Appointment } from "../../Data/Models/appointmen
 import idValidation from "../Validations/idValidation";
 import { Criteria, IdMongo } from "../../Utils/Types/typesMongoose";
 import createAppointmentValidation from "../Validations/CreatesValidation/createAppointmentValidation";
-import { CreateAppointmentDto } from "typesRequestDtos";
+import { CreateAppointmentDto} from "typesRequestDtos";
 import mongoose, { Error } from "mongoose";
 import { ProfessionalTimeSlots } from "Source/Data/Models/professionalTimeSlotsSchema";
 import { isAvailable } from "../../Utils/scheduleUtils";
 import { DailyHourAvailability, HourlySlot } from "Source/Data/Models/dailyHourASchema";
 import dayjs, { Dayjs } from "dayjs";
 import 'dayjs/locale/es.js'
-import { get } from "http";
+
 
 class AppointmentManager {
     private appointmentRepository
@@ -71,11 +71,12 @@ class AppointmentManager {
     }
     async createAppointmentByProfessional(bodyDto:CreateAppointmentDto){
         const body: Appointment = {
-            pacient_id: new mongoose.Types.ObjectId(bodyDto.pacient_id),
-            professional_id: new mongoose.Types.ObjectId(bodyDto.professional_id),
+            pacient_id: bodyDto.pacient_id,
+            professional_id: bodyDto.professional_id,
             date_time: new Date(bodyDto.date_time) as unknown as Dayjs,
             schedule: bodyDto.schedule,
             state: bodyDto.state as appointmentState,
+            order_photo:bodyDto.order_photo,
             session_type: bodyDto.session_type,
         };
         await createAppointmentValidation.parseAsync(body)
@@ -176,8 +177,12 @@ class AppointmentManager {
         return await this.appointmentRepository.updateAppointment(body, id)
     }
     async deleteAppointment(id: IdMongo){
-        await idValidation.parseAsync(id)
-        return await this.appointmentRepository.deleteAppointment(id)
+        await idValidation.parseAsync(id);
+        let appointment = await this.appointmentRepository.getAppointmentById(id);
+        console.log(appointment)
+        let email = appointment.pacient_id.user_id.email
+        let appointmentToDelete : Appointment = await this.appointmentRepository.deleteAppointment(id);
+        return {appointmentToDelete, email}
     }
 }
 export default AppointmentManager

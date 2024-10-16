@@ -1,12 +1,14 @@
 
 import mongoose, { ObjectId } from "mongoose";
+import { Appointment } from "Source/Data/Models/appointmentSchema";
 import { DaySchedule } from "Source/Data/Models/professionalTimeSlotsSchema";
 export interface CreateAppointmentDto {
     pacient_id: mongoose.Types.ObjectId | string;          
     professional_id: mongoose.Types.ObjectId | string;     
     date_time: Date;
     schedule: DaySchedule;             
-    state: string;               
+    state: string;
+    order_photo: string;               
     session_type: string;        
 }
 export interface CreateProfessionalDto{
@@ -77,6 +79,14 @@ export interface userAuth {
         password: string
     }
 }
+
+
+
+export interface AuthenticatedRequest<T = unknown> extends Omit<Request, 'body'> {
+    user?: userAuth;
+    body: T;
+}
+
 export type userLogin = {
     email:string,
     password: string

@@ -4,10 +4,11 @@
   "description": "sistema para gestionar turnos en consultorio",
   "main": "dist/index.js",
   "scripts": {
+    "preinstall": "npm install --force",
     "test": "c8 vitest run --coverage ",
     "test:watch": "vitest --watch",
     "build": "tsc && node add-js-extension.mjs ",
-    "start": "nodemon dist/index.js"
+    "start": "node dist/index.js"
   },
   "type": "module",
   "author": "Santiago Viale",

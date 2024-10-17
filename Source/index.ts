@@ -2,13 +2,14 @@
 import dotenv from 'dotenv'
 import admin from 'firebase-admin';
 import AppFactory from './Presentation/Factories/appFactory'
+import { cert } from 'firebase-admin/app';
 
 dotenv.config()
 
-// Inicializar Firebase Admin SDK
-admin.initializeApp({
+const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
-  credential: admin.credential.applicationDefault(),
+admin.initializeApp({
+  credential: cert(serviceAccount),
 
 });
 

@@ -18,6 +18,6 @@
     "allowImportingTsExtensions": false, 
     "moduleDetection": "force"
   },
-  "include": ["Source/**/*", "global.d.ts"],
+  "include": ["Source/**/*", "global.d.ts", "./api/*.ts"],
   "exclude": ["node_modules"]
 }

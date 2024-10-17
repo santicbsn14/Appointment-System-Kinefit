@@ -4,11 +4,11 @@
   "description": "sistema para gestionar turnos en consultorio",
   "main": "dist/index.js",
   "scripts": {
-    "preinstall": "npm install --force",
     "test": "c8 vitest run --coverage ",
     "test:watch": "vitest --watch",
     "build": "tsc && node add-js-extension.mjs ",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "vercel-build": "echo hello"
   },
   "type": "module",
   "author": "Santiago Viale",
@@ -48,8 +48,8 @@
     "@vitest/ui": "^1.4.0",
     "c8": "^10.1.2",
     "concurrently": "^8.2.2",
-    "eslint": "^9.7.0",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.31.0",
     "globals": "^15.8.0",
     "jsdom": "^25.0.0",
     "mongodb-memory-server": "^10.0.0",

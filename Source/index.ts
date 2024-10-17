@@ -8,7 +8,7 @@ dotenv.config()
 // Inicializar Firebase Admin SDK
 admin.initializeApp({
 
-  credential: admin.credential.applicationDefault(),
+  credential: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 
 });
 

@@ -7,7 +7,8 @@ dotenv.config()
 
 // Inicializar Firebase Admin SDK
 admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
+  //@ts-expect-error
+  credential: process.env.GOOGLE_APLICATION_CREDENTIALS,
   // Si tienes una configuración específica de tu proyecto, puedes agregarla aquí
   // databaseURL: "https://your-project-id.firebaseio.com"
 });

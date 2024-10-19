@@ -70,7 +70,7 @@ class AppointmentRepository implements IAppointmentRepository{
     }
     async getAppointmentById(id: IdMongo):Promise<Appointment|null>{
   
-      const appointment = await appointmentSchema.findById(id)
+      const appointment = await appointmentSchema.findById(id).populate(['pacient_id','professional_id'])
       if(!appointment) throw new Error('Appointment could not found')
         return {
             _id: appointment._id,

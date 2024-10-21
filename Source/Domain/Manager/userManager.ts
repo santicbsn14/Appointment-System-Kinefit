@@ -7,6 +7,7 @@ import createUserValidation from "../Validations/CreatesValidation/createUserVal
 import updateUserValidation from "../Validations/UserValidations/updateUserValidation";
 import { validPassword } from "../../Utils/hashService";
 import admin from "firebase-admin";
+import { createHash } from "crypto";
 
 class UserManager {
     private userRepository
@@ -31,14 +32,13 @@ class UserManager {
     }
     async updateUser(body:IUser, id:IdMongo){
         await updateUserValidation.parseAsync({...body, id})
-        let user: IUser = await this.userRepository.getUserByEmail(body.email)
-        const isHashedPassword = validPassword(body.password, user.password)
-        if (!isHashedPassword)
-            {
-                throw new Error('Updated failed, invalid password.');
-            }
+        let {password, ...bodyUserDto} = body
+        const hashedPassword = await createHash(password)
+        let userWithPassword = {...bodyUserDto,
+            password:hashedPassword
+        }
         
-        return await this.userRepository.updateUser(id, body)
+        return await this.userRepository.updateUser(id, userWithPassword)
     }
     async deleteUser(id: IdMongo){
         await idValidation.parseAsync(id)

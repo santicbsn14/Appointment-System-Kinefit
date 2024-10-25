@@ -36,7 +36,7 @@ export const updatedUser = async (req: CustomRequest, res: Response, next:NextFu
         let id = req.params.id as unknown as IdMongo
         let manager = new SessionManager()
         let response = await manager.updateUser(data, id)
-        return response
+        res.status(201).json(response)
     } catch (error) {
         next(error)
     }

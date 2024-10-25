@@ -51,7 +51,7 @@ class UserManager {
             let userWithPassword = {...body,
                 password:hashedPassword
             }
-            let updatedUser = await this.userRepository.updateUser(userWithPassword, id)
+            let updatedUser = await this.userRepository.updateUser(id, userWithPassword)
             return updatedUser
         }
         return await this.userRepository.updateUser(body, id)

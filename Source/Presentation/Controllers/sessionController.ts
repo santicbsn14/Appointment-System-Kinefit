@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import pkg from "firebase-admin";
 import SessionManager from "../../Domain/Manager/sessionManager";
 import { CreateUserDto, userLogin } from "typesRequestDtos";
+import { IdMongo } from "typesMongoose";
 
 
 const {auth} = pkg
@@ -25,6 +26,17 @@ export const login = async (req: CustomRequest<userLogin>, res:Response, next:Ne
         let manager = new SessionManager()
         let response = await manager.login(user)
 
+    } catch (error) {
+        next(error)
+    }
+}
+export const updatedUser = async (req: CustomRequest, res: Response, next:NextFunction) => {
+    try {
+        let data = req.body
+        let id = req.params.id as unknown as IdMongo
+        let manager = new SessionManager()
+        let response = await manager.updateUser(data, id)
+        return response
     } catch (error) {
         next(error)
     }

@@ -46,6 +46,14 @@ class UserManager {
     }
     async updateUser(body:IUser, id:IdMongo){
         await updateUserValidation.parseAsync({...body, id})
+        if(body.password){
+            const hashedPassword = await createHash(body.password)
+            let userWithPassword = {...body,
+                password:hashedPassword
+            }
+            let updatedUser = await this.userRepository.updateUser(userWithPassword, id)
+            return updatedUser
+        }
         return await this.userRepository.updateUser(body, id)
     }
     async deleteUser(id: IdMongo){

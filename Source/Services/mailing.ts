@@ -34,12 +34,12 @@ export const mailForConfirmAppointment = (userEmail: string) => {
     })
 };
 export const mailForDeleteAppointment = (userEmail: string) => {
-    console.log(userEmail)
     transport.sendMail({
         from: 'Santiago Viale',
         to: userEmail,
         html: '<h2>Te contactamos desde kinefit para notificarte de la cancelacion de tu turno! </h2>'
     });
 };
+
 
 

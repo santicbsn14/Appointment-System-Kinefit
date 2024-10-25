@@ -37,8 +37,9 @@ class UserManager {
             {
                 throw new Error('Updated failed, invalid password.');
             }
+        let {password, ...cleanPassword} = body
         
-        return await this.userRepository.updateUser(id, body)
+        return await this.userRepository.updateUser(id, cleanPassword)
     }
     async deleteUser(id: IdMongo){
         await idValidation.parseAsync(id)

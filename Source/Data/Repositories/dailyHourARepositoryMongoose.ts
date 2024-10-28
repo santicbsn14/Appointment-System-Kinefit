@@ -67,18 +67,23 @@ class DailyHourAvailabilityRepository implements IDailyHourAvailabilityRepositor
     }
     async getDailyHourAvailabilityByDate(date: dayjs.Dayjs, professional_id?: IdMongo):Promise<DailyHourAvailability|null|string>{
       
-      let dailyHourAvailability = await dailyHourAvailabilitySchema.findOne({date: date})
-      
-      if(!dailyHourAvailability) {
+      const dateAsDayjs = dayjs(date);
+        
+      let dailyHourAvailability = await dailyHourAvailabilitySchema.findOne({ 
+          date: dateAsDayjs.toDate() 
+      });
+  
+      if (!dailyHourAvailability) {
           if (!professional_id) {
-            throw new Error("professional_id is required to create a new DailyHourAvailability");
+              throw new Error("professional_id is required to create a new DailyHourAvailability");
           }
              dailyHourAvailability = await dailyHourAvailabilitySchema.create({
              professional_id: professional_id,
-             date:dayjs(date),
-             hourly_slots:[{hour: date.utc().hour(),
-               max_sessions:6,
-               current_sessions:1
+             date: dateAsDayjs.toDate(),
+             hourly_slots: [{ 
+                 hour: dateAsDayjs.utc().hour(), 
+                 max_sessions: 8,
+                 current_sessions: 1
              }]
            })
       }

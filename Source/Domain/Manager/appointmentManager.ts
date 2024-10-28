@@ -31,9 +31,6 @@ class AppointmentManager {
         await idValidation.parseAsync(aid)
         return await this.appointmentRepository.getAppointmentById(aid)
     }
-    async getNextAppointmentAvailable(){
-        
-    }
     async createAppointmentByPatient(bodyDto: CreateAppointmentDto){
         let body : Appointment = {...bodyDto,
             pacient_id: bodyDto.pacient_id,

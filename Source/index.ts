@@ -2,7 +2,7 @@
 import dotenv from 'dotenv'
 import admin from 'firebase-admin';
 import AppFactory from './Presentation/Factories/appFactory'
-import serviceAccount from "firebase.key.json" assert { type: "json" };
+import serviceAccount from "../firebase.key.json" assert { type: "json" };
 
 dotenv.config()
 

@@ -24,7 +24,7 @@ export interface ProfessionalTimeSlots {
 }
 
 const professionalTimeSlotsSchema = new Schema<ProfessionalTimeSlots>({
-    professional_id: { type: Schema.Types.ObjectId, ref: 'professional', required: true },
+    professional_id: { type: Schema.Types.ObjectId, index: true, ref: 'professional', required: true },
     schedule: [
         {
             week_day: { type: Number, min: 0, max: 6, required: true }, 

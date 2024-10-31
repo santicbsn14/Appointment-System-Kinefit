@@ -9,7 +9,7 @@ export interface Role{
     permissions: string[]
 }
 const RoleSchema = new Schema<Role>({
-  name: { type: Schema.Types.String, required: true },
+  name: { type: Schema.Types.String, index: true, required: true },
   permissions: [{ type: Schema.Types.String }]
 });
 

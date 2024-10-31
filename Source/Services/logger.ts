@@ -9,9 +9,9 @@ const customLogger = winston.createLogger({
         new winston.transports.File({ filename: 'combined.log' }),
       ]
 })
-if (process.env.NODE_ENV !== 'production') {
+
     customLogger.add(new winston.transports.Console({
       format: winston.format.simple(),
     }));
-  }
+  
   export default customLogger

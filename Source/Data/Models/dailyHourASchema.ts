@@ -15,7 +15,7 @@ export interface DailyHourAvailability {
 }
 const dailyHourAvailabilitySchema = new Schema<DailyHourAvailability>({
     professional_id: { type: Schema.Types.ObjectId, ref: 'professionals', required: true },
-    date: { type: Date, required: true, index: true }, // Esto está bien para almacenar Dayjs
+    date: { type: Date, required: true, index: true }, 
     hourly_slots: [{
         hour: { type: Number, required: true, min: 0, max: 23 },
         max_sessions: { type: Number, required: true, min: 1 },

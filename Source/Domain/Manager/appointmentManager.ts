@@ -43,7 +43,7 @@ class AppointmentManager {
         
         const proTimeSlots : ProfessionalTimeSlots = await this.professionalTimeSlotRepository.getProfessionalTimeSlotsByPro(body.professional_id);
         if (!proTimeSlots) throw new Error('Professional not found');
-
+        if(proTimeSlots.state != 'Disponible') throw new Error('The professional is not available at the moment')
         const isAvailableSlot = isAvailable(proTimeSlots.schedule, body.schedule);
         if (!isAvailableSlot) throw new Error('The professional does not work in that time slot');
 

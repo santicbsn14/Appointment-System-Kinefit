@@ -30,14 +30,14 @@ export const mailForConfirmAppointment = (userEmail: string) => {
     transport.sendMail({
         from: 'Santiago Viale',
         to: userEmail,
-        html:'<h2>Tu turno ha sido confirmado. Te esperamos en kinefit! </h2>'
+        html:'<h2>Tu turno ha sido confirmado. Te esperamos en GyM! </h2>'
     })
 };
 export const mailForDeleteAppointment = (userEmail: string) => {
     transport.sendMail({
         from: 'Santiago Viale',
         to: userEmail,
-        html: '<h2>Te contactamos desde kinefit para notificarte de la cancelacion de tu turno! </h2>'
+        html: '<h2>Te contactamos desde GyM para notificarte de la cancelacion de tu turno! </h2>'
     });
 };
 

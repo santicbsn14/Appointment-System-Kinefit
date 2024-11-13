@@ -62,8 +62,8 @@ export const getAll = async (req: CustomRequest, res: Response, next: NextFuncti
         try
         {
             const manager = new AppointmentManager()
-            const { limit, page }: Criteria = req.query;
-            const data = await manager.getAll({ limit, page });
+            const { limit, page, ...filters }: Criteria = req.query;
+            const data = await manager.getAll({ limit, page, ...filters });
             res.send({ status: 'success', appointments: data.docs, ...data, docs: undefined })
         }
         catch(error)

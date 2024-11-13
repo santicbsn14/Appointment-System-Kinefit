@@ -70,7 +70,8 @@ class DailyHourAvailabilityRepository implements IDailyHourAvailabilityRepositor
       const dateAsDayjs = dayjs(date);
         
       let dailyHourAvailability = await dailyHourAvailabilitySchema.findOne({ 
-          date: dateAsDayjs.toDate() 
+          date: dateAsDayjs.toDate(),
+          professional_id: professional_id 
       });
   
       if (!dailyHourAvailability) {

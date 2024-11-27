@@ -20,9 +20,8 @@ class DailyHourAvailabilityManager {
        return await this.dailyHourAvailabilityRepository.getAll(criteria)
     }
     async getDailyHourAvailabilityById(id: string){
-        let aid = new mongoose.Types.ObjectId(id)
-        await idValidation.parseAsync(aid)
-        return await this.dailyHourAvailabilityRepository.getDailyHourAvailabilityById(aid)
+        await idValidation.parseAsync(id)
+        return await this.dailyHourAvailabilityRepository.getDailyHourAvailabilityById(id)
     }
     async createDailyHourAvailability(bodyDto:CreateDailyHourAvailabilityDto){
         const body: DailyHourAvailability = {

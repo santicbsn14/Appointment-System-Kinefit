@@ -39,8 +39,6 @@ class AppExpress {
         this.build();
         this.connectDb();
     }
-
-    // Inicializar middlewares
     init() {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
@@ -106,7 +104,7 @@ class AppExpress {
 
     }
 
-    // Similar a listen, pero puede personalizarse más
+
     start() {
         if (!process.env.VERCEL) {
             this.server = this.app.listen(process.env.PORT, () => {
@@ -118,6 +116,5 @@ class AppExpress {
 
 export default AppExpress;
 
-// Si estás en Vercel, exporta la aplicación sin llamar a app.listen()
 const appExpressInstance = new AppExpress();
 export const app = appExpressInstance.callback();

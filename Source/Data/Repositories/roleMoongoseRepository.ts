@@ -3,7 +3,7 @@ import roleSchema from '../Models/roleSchema';
 import { Role } from '../Models/roleSchema';
 import { PaginateResult } from 'mongoose';
 
-interface RoleMoongoseRepository{
+interface RoleMongooseRepository{
     getAll: (criteria :Criteria)=> Promise<Paginated<Role>| null>,
     createRole: (role: Role)=> Promise<Role | null>,
     getRoleById: (roleId: IdMongo) => Promise<Role | null>,

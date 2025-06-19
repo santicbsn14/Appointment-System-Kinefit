@@ -106,7 +106,7 @@ class AppointmentManager {
                     ...bodyDto,
                     pacient_id: bodyDto.pacient_id,
                     professional_id: bodyDto.professional_id,
-                    date_time: dayjs(bodyDto.date_time),
+                    date_time: new Date(bodyDto.date_time) as unknown as Dayjs,
                     schedule: {
                         week_day: bodyDto.schedule.week_day, 
                         time_slots: {

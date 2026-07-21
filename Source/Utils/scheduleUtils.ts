@@ -23,17 +23,24 @@ export function getDayOfWeek(date: Date): DayOfWeek {
 
 export function validateProfessionalSchedule(schedule: ISchedule, date: Date, timeFrom: string, timeTo: string): string | null {
   const day = getDayOfWeek(date)
-  const slot = schedule.weeklySlots.find((s) => s.day === day && s.isAvailable)
+  const slotsForDay = schedule.weeklySlots.filter((s) => s.day === day && s.isAvailable)
 
-  if (!slot) return `El profesional no atiende los días ${day}.`
+  if (slotsForDay.length === 0) return `El profesional no atiende los días ${day}.`
 
-  const slotStart = timeToMinutes(slot.timeFrom)
-  const slotEnd = timeToMinutes(slot.timeTo)
   const requestStart = timeToMinutes(timeFrom)
   const requestEnd = timeToMinutes(timeTo)
 
-  if (requestStart < slotStart || requestEnd > slotEnd) {
-    return `El profesional atiende de ${slot.timeFrom} a ${slot.timeTo} ese día.`
+  const fitsInAnySlot = slotsForDay.some((slot) => {
+    const slotStart = timeToMinutes(slot.timeFrom)
+    const slotEnd = timeToMinutes(slot.timeTo)
+    return requestStart >= slotStart && requestEnd <= slotEnd
+  })
+
+  if (!fitsInAnySlot) {
+    const horariosDisponibles = slotsForDay
+      .map(s => `${s.timeFrom} a ${s.timeTo}`)
+      .join(' / ')
+    return `El profesional atiende en los siguientes horarios ese día: ${horariosDisponibles}.`
   }
 
   return null
